@@ -7,6 +7,22 @@
 export const PRO_AVAILABLE = true;
 
 /**
+ * Launch period: every browser is Pro, with no key and nothing for sale.
+ *
+ * On while the extension finds its first users. `isPro()` answers true for
+ * everyone, so Draw mode is free, and the popup's "Pro?" link and the options
+ * page's licence card are hidden - there is no shop to point at. A hand-edited
+ * boolean on purpose, unlike `DEV_UNLOCK_PRO`: this one *is* meant to ship.
+ *
+ * Turning it off is the whole of re-enabling Pro; the licence code underneath
+ * never stops working. Decide first what happens to people who installed while
+ * it was on: a later version sees them in `chrome.runtime.onInstalled` as
+ * `reason: "update"` with a `previousVersion` from this period, and that is the
+ * moment to keep Draw free for them if the answer is yes.
+ */
+export const LAUNCH_FREE_FOR_ALL = true;
+
+/**
  * Treat this browser as licensed without a key.
  *
  * There is no product to buy a key from yet, so this is the only way to

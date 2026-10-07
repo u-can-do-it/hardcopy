@@ -49,6 +49,12 @@ Pro, all of it, gated once at `ANNOTATE start` in `handleAnnotate`
 The bar has no tier logic: it always offers every tool, and nothing in
 `lib/draw/` knows Pro exists.
 
+**Launch period: `LAUNCH_FREE_FOR_ALL` in `lib/constants.ts` is `true` and is
+meant to ship.** `isPro()` answers true for everyone, so Draw is free too, and
+the popup's "Pro?" link and the options page's licence card are hidden. It is a
+deliberate, temporary product decision - don't flip it, and don't fold it into
+`DEV_UNLOCK_PRO`. Turning it off is how Pro comes back.
+
 ## Invariants — breaking these is a product bug, not a style issue
 
 - **The print path must never touch `debugger`.** `exportMode: "print"`

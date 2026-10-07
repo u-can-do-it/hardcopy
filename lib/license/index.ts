@@ -8,7 +8,7 @@
  *     revalidates in the background, so a flaky network can never fail a save.
  */
 
-import { DEV_UNLOCK_PRO, PRO_AVAILABLE } from "../constants";
+import { DEV_UNLOCK_PRO, LAUNCH_FREE_FOR_ALL, PRO_AVAILABLE } from "../constants";
 
 const API = "https://api.lemonsqueezy.com/v1/licenses";
 const STORAGE_KEY = "license";
@@ -166,6 +166,10 @@ export async function deactivate(): Promise<void> {
  */
 export async function isPro(): Promise<boolean> {
   if (!PRO_AVAILABLE) return false;
+
+  // The launch period: Pro for everyone, quietly - it is the shipping state,
+  // not a developer override, so no warning (lib/constants.ts).
+  if (LAUNCH_FREE_FOR_ALL) return true;
 
   if (DEV_UNLOCK_PRO) {
     console.warn("[pagepdf] DEV_UNLOCK_PRO is on - Pro is unlocked without a key.");

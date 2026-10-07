@@ -18,6 +18,7 @@ import { useEffect, useState } from "preact/hooks";
 import { LicenseForm } from "@/components/license-form";
 import { ProDialog } from "@/components/pro-dialog";
 import { SettingRow } from "@/components/setting-row";
+import { LAUNCH_FREE_FOR_ALL } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -317,26 +318,29 @@ export function App() {
         </CardContent>
       </Card>
 
-      <Card className="mb-6 gap-3 py-5">
-        <CardHeader className="px-5">
-          <SectionTitle>Pro licence</SectionTitle>
-          <CardDescription>
-            A one-time $5 key unlocks Draw mode: pencil, highlighter, shapes, covers that
-            remove text, symbols and text labels. Everything else is free. No account and no
-            subscription.{" "}
-            <button
-              type="button"
-              onClick={() => setProOpen(true)}
-              className="text-primary cursor-pointer hover:underline"
-            >
-              What's in Pro?
-            </button>
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="px-5">
-          <LicenseForm />
-        </CardContent>
-      </Card>
+      {/* Nothing is for sale during the launch period (lib/constants.ts). */}
+      {LAUNCH_FREE_FOR_ALL ? null : (
+        <Card className="mb-6 gap-3 py-5">
+          <CardHeader className="px-5">
+            <SectionTitle>Pro licence</SectionTitle>
+            <CardDescription>
+              A one-time $5 key unlocks Draw mode: pencil, highlighter, shapes, covers that
+              remove text, symbols and text labels. Everything else is free. No account and no
+              subscription.{" "}
+              <button
+                type="button"
+                onClick={() => setProOpen(true)}
+                className="text-primary cursor-pointer hover:underline"
+              >
+                What's in Pro?
+              </button>
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-5">
+            <LicenseForm />
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex items-center gap-3">
         <Button variant="outline" onClick={() => void resetAll()} disabled={current === null}>

@@ -11,6 +11,12 @@ the state of the code and the places where it knowingly departs from that brief.
 **v0.1 is implemented and builds** - the code of both weekends of the
 two-weekend plan in §8. What is missing is store work, not code (below).
 
+> **Launch period: everything is free, Draw mode included.**
+> `LAUNCH_FREE_FOR_ALL` in `lib/constants.ts` makes `isPro()` true for every
+> browser and hides the Pro link and licence card, so v0.1 ships with nothing
+> for sale. The licence path underneath is unchanged; setting the constant to
+> `false` brings the $5 Draw tier back.
+
 | §8 Weekend 1                                | State                                            |
 | -------------------------------------------- | ------------------------------------------------ |
 | WXT init, TypeScript, pinned versions        | done (`wxt` 0.20.27, exact pins)                 |

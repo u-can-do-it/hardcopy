@@ -19,6 +19,7 @@ import { useEffect, useState } from "preact/hooks";
 
 import { ProDialog } from "@/components/pro-dialog";
 import { SettingRow } from "@/components/setting-row";
+import { LAUNCH_FREE_FOR_ALL } from "@/lib/constants";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -200,13 +201,20 @@ export function App() {
           <Settings2 />
           Settings
         </Button>
-        <button
-          type="button"
-          onClick={() => setProOpen(true)}
-          className="text-muted-foreground hover:text-foreground cursor-pointer text-[11px] transition-colors"
-        >
-          Free &middot; unlimited &middot; <span className="underline">Pro?</span>
-        </button>
+        {/* Nothing is for sale during the launch period (lib/constants.ts). */}
+        {LAUNCH_FREE_FOR_ALL ? (
+          <span className="text-muted-foreground text-[11px]">
+            Free &middot; unlimited &middot; no account
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setProOpen(true)}
+            className="text-muted-foreground hover:text-foreground cursor-pointer text-[11px] transition-colors"
+          >
+            Free &middot; unlimited &middot; <span className="underline">Pro?</span>
+          </button>
+        )}
       </footer>
 
       <ProDialog open={proOpen} onOpenChange={setProOpen} />
