@@ -141,7 +141,6 @@ export interface StateSuccess {
   /** Why the active tab cannot be exported, when it cannot. */
   blocked?: string | undefined;
   tabTitle?: string | undefined;
-  tabUrl?: string | undefined;
 }
 
 export interface AnnotateSuccess {

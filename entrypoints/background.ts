@@ -879,7 +879,6 @@ async function handleState(): Promise<StateSuccess> {
     isPro: pro,
     blocked: verdict.ok ? undefined : verdict.reason,
     tabTitle: tab?.title,
-    tabUrl: tab?.url,
   };
 }
 

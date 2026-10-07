@@ -1,15 +1,9 @@
 /**
- * Text-field drafts and debounced saving, shared by the options page and the
- * popup's PDF settings view.
+ * Text-field drafts and debounced saving for the options page.
  *
  * Text fields keep a local draft signal rather than reading straight from the
  * settings signal: saving is debounced, and a field bound directly to storage
  * would rewrite itself under the cursor mid-word.
- *
- * This lives in `stores/` rather than in either entrypoint because both render
- * the same fields now, and the debounce is the part worth having one of. Signals
- * at module scope are per-document, so the popup and the options page hold
- * separate drafts and stay in step through storage.sync - see stores/settings.ts.
  */
 
 import { computed, signal } from "@preact/signals";
@@ -27,35 +21,18 @@ export const stickyMinHeightDraft = signal("");
 export const savedFlash = signal(false);
 
 /**
- * What the filename preview renders against.
- *
- * A made-up page by default, because the options page has no page to speak of -
- * it *is* the tab, and previewing "pagepdf settings" would be a worse example
- * than the sample. The popup replaces it with the tab the user is looking at,
- * where the preview stops being an example and becomes the name the file is
- * about to get.
+ * What the filename preview renders against: a made-up page, because the
+ * options page has no page to speak of - it *is* the tab, and previewing
+ * "pagepdf settings" would be a worse example than the sample.
  */
-const SAMPLE_PAGE = {
+export const SAMPLE_PAGE = {
   title: "How Chrome prints a web page",
   url: "https://example.com/blog/printing",
 };
 
-export const previewPage = signal<{ title: string; url: string }>(SAMPLE_PAGE);
-
-/**
- * Point the preview at a real page. Keeps the sample when there is nothing
- * usable to show - a tab whose title and URL are both unreadable would preview
- * as the bare fallback ("page.pdf"), which teaches the user nothing about their
- * template.
- */
-export function setPreviewPage(title: string | undefined, url: string | undefined): void {
-  if (!title?.trim() && !url?.trim()) return;
-  previewPage.value = { title: title ?? "", url: url ?? "" };
-}
-
 /** Live example, so the token list is never guesswork. */
 export const filenamePreview = computed(() =>
-  renderFilename(filenameDraft.value, previewPage.value),
+  renderFilename(filenameDraft.value, SAMPLE_PAGE),
 );
 
 /**

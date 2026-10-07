@@ -6,12 +6,8 @@ import { computed, signal } from "@preact/signals";
 
 import type { BgRequest, BgResponse, CaptureSuccess, ExportSuccess } from "@/lib/messages";
 import type { CaptureArea } from "@/lib/types";
-import { setPreviewPage, syncDraftsFromSettings } from "@/stores/drafts";
 import { proUnlocked } from "@/stores/license";
 import { initSettingsStore, settings } from "@/stores/settings";
-
-/** Which panel the popup is showing. */
-export type View = "export" | "settings";
 
 export type Status =
   | { kind: "hint" }
@@ -28,13 +24,6 @@ export interface TabState {
 export const tab = signal<TabState | null>(null);
 export const status = signal<Status>({ kind: "hint" });
 export const busy = signal(false);
-
-/**
- * Deliberately not persisted: a popup should open on the thing it is for, and
- * that is the export button. The panels themselves stay mounted (App.tsx), so
- * moving between them keeps unsaved drafts and scroll position.
- */
-export const view = signal<View>("export");
 
 /** `isPro()` as the background answered it when the popup opened. */
 const proAtOpen = signal(false);
@@ -94,22 +83,14 @@ function message(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-export function showView(next: View): void {
-  view.value = next;
-}
-
 export async function initPopup(): Promise<void> {
   await initSettingsStore();
-  // The PDF settings panel edits the same text fields as the options page.
-  syncDraftsFromSettings();
 
   try {
     const state = await send({ type: "GET_STATE" });
     if (state.ok && "settings" in state) {
       tab.value = { title: state.tabTitle ?? "", blocked: state.blocked };
       proAtOpen.value = state.isPro;
-      // So the filename preview in the settings panel names *this* page.
-      setPreviewPage(state.tabTitle, state.tabUrl);
     } else if (!state.ok) {
       status.value = { kind: "error", text: state.error };
     }

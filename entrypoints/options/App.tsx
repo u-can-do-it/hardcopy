@@ -163,8 +163,8 @@ export function App() {
     <main className="mx-auto max-w-2xl px-6 py-8 pb-14">
       <h1 className="text-xl font-semibold">pagepdf settings</h1>
       <p className="text-muted-foreground mt-1 mb-6 text-sm">
-        These are the defaults for every export. The popup's toggles and the panel behind its
-        cog are the same settings and stay in sync with this page.
+        These are the defaults for every export. The popup's two toggles are the same settings
+        and stay in sync with this page.
       </p>
 
       <Card className="mb-6 gap-4 py-5">

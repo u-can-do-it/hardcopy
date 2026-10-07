@@ -243,7 +243,7 @@ is the listing work, not a feature.
 ### Weekend 1 → v0.1 in the store (Free only)
 
 - [x] `pnpm dlx wxt@0.20 init`, TypeScript, pin versions, repo, README
-- [x] Popup: Export button, "hide sticky elements" / "expand details" / "load lazy images" / "add header" toggles — plus Draw, two screenshot buttons and the PDF settings panel
+- [x] Popup: Export button, "hide sticky elements" / "expand details" / "load lazy images" / "add header" toggles — plus Draw and two screenshot buttons; every other setting lives on the options page
 - [x] Content script pre-processing + `window.print()` + `afterprint` restore — injected, never declared (Deviation 3)
 - [x] Options page: default toggles, filename template (now used by the one-click PDF and both screenshot paths), and the export mode
 - [ ] Icons done (`pnpm icons`); store screenshots (3), 132-char short description and the single-purpose statement are not

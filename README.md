@@ -122,7 +122,7 @@ entrypoints/
   prepare.ts        injected on demand: DOM pre-processing + window.print(); owns the prepared state
   select-area.ts    injected on demand: the drag-a-rectangle overlay for screenshots
   annotate.ts       injected on demand: the drawing bar, the layer, the pointer state machine
-  popup/            Preact: single-page and print-dialog rows, Export button, Draw button, two screenshot buttons, PDF settings panel
+  popup/            Preact: single-page and print-dialog rows, Export button, Draw button, two screenshot buttons
   options/          Preact: defaults, export mode, hide rules, filename template, licence
 lib/
   dom/              pre-processing: hide fixed, expand, un-clip, lazy-load, header, print CSS, viewport units

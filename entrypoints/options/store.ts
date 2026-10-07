@@ -1,9 +1,8 @@
 /**
  * Options page state as signals.
  *
- * The drafts and the debounced save live in stores/drafts.ts, shared with the
- * popup's PDF settings view; what is left here is what only a full page has -
- * first load, and "Reset to defaults".
+ * The drafts and the debounced save live in stores/drafts.ts; what is left here
+ * is first load, and "Reset to defaults".
  */
 
 import { resetSettings } from "@/lib/settings";
