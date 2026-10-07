@@ -1,0 +1,13 @@
+# pnpm 11 reads its settings from here, not from package.json's "pnpm" field.
+allowBuilds:
+  # Fetches a platform-specific binary; vite (and so `wxt build`) needs it.
+  esbuild: true
+  # Legacy child_process shim pulled in transitively; nothing here runs it.
+  spawn-sync: false
+
+overrides:
+  # wxt 0.20 resolves vite 8 while vitest 3 pins vite ^6, and two copies of
+  # vite mean two incompatible copies of its types - `vitest.config.ts` stops
+  # typechecking. Every consumer here (wxt, @tailwindcss/vite,
+  # @preact/preset-vite, vitest) accepts 6.x, so collapse to one.
+  vite: 6.4.3

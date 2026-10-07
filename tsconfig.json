@@ -1,0 +1,29 @@
+{
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "verbatimModuleSyntax": true,
+
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+
+    // `paths` replaces the inherited map rather than merging, so WXT's aliases
+    // are repeated here alongside the React -> preact/compat redirects that let
+    // shadcn's components and Radix resolve "react" at type level.
+    "paths": {
+      "@": ["."],
+      "@/*": ["./*"],
+      "~": ["."],
+      "~/*": ["./*"],
+      "react": ["./node_modules/preact/compat"],
+      "react-dom": ["./node_modules/preact/compat"],
+      "react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
+      "react-dom/*": ["./node_modules/preact/compat/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts", ".wxt/**/*"],
+  "exclude": ["node_modules", ".output"]
+}
