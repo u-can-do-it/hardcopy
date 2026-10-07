@@ -1072,4 +1072,16 @@ after it is published. The build copies `LICENSE.md` into the extension
 (`wxt.config.ts`, `build:publicAssets`), because FSL applies to the versions it
 ships with.
 
-Third-party dependencies keep their own licences (MIT, ISC, Apache-2.0).
+Third-party dependencies keep their own licences (MIT, ISC, Apache-2.0), and
+every build writes their notices to `THIRD_PARTY_LICENSES.txt` beside
+`LICENSE.md`. The list comes from what the bundles actually contain, not from
+`package.json`: a Vite plugin added in `wxt.config.ts` records the package
+behind every module that rendered, plus the packages our stylesheets
+`@import`, and `scripts/third-party-licenses.ts` reads each one's licence file.
+`pnpm dev` skips the file, because it serves the popup and options pages
+instead of building them and the list would be incomplete.
+
+A few packages publish no licence file (`wxt`, `@wxt-dev/browser`,
+`@radix-ui/react-compose-refs` 1.1.2); their upstream repository's licence is
+kept in `scripts/licenses/` and quoted instead. A new dependency like that makes
+the build warn and say what to add.
