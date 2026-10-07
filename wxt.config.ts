@@ -25,8 +25,10 @@ const shipped = new Set<string>();
 // 0.21 moves entrypoint helpers again, and this code is written against 0.20.
 export default defineConfig({
   manifest: {
-    name: "pagepdf",
-    short_name: "pagepdf",
+    // The store lists an extension under its manifest name, so the words people
+    // search for ("save page as PDF") ride along with the brand.
+    name: "Hardcopy - Save Page as PDF",
+    short_name: "Hardcopy",
     description:
       "Save any page as a PDF with real, searchable text that looks like the screen. Free, unlimited, no nagging.",
 

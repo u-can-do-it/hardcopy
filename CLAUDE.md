@@ -1,7 +1,9 @@
 # CLAUDE.md
 
-Chrome MV3 extension (WXT + Preact) that saves a page as a PDF with real,
-searchable text — plus full-page and area screenshots.
+Hardcopy: a Chrome MV3 extension (WXT + Preact) that saves a page as a PDF with
+real, searchable text — plus full-page and area screenshots. Code identifiers
+(`data-pagepdf-*`, `__pagepdfInstalled`, CSS names) keep the old working name
+`pagepdf` on purpose; only what users see says Hardcopy.
 
 ## Read first
 

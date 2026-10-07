@@ -511,7 +511,7 @@ reach rather than whether it exists:
 
 ## Store listing (§11)
 
-- [ ] Final name. "pagepdf" is a working name; §1 rules out "Web to PDF".
+- [x] Final name: Hardcopy (manifest name "Hardcopy - Save Page as PDF"). "pagepdf" was the working name; §1 ruled out "Web to PDF".
 - [ ] 3 screenshots: popup, before/after (print CSS vs screen look), a page
       marked up with the drawing tools and the PDF it produced.
 - [ ] Host the privacy policy at a public URL and put it in `PRIVACY_POLICY_URL`.

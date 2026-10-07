@@ -1,8 +1,8 @@
-# Privacy policy - pagepdf
+# Privacy policy - Hardcopy
 
 _Last updated: 7 September 2026_
 
-pagepdf does not collect, transmit, or store any personal data. Everything the
+Hardcopy does not collect, transmit, or store any personal data. Everything the
 extension does happens locally in your browser, and there is no server involved.
 
 Your settings (which pre-processing options you prefer, your filename template

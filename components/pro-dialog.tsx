@@ -53,7 +53,7 @@ export function ProDialog({ open, onOpenChange }: ProDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md" onOpenChange={onOpenChange}>
         <DialogHeader>
-          <DialogTitle>pagepdf Pro</DialogTitle>
+          <DialogTitle>Hardcopy Pro</DialogTitle>
           <DialogDescription>
             Draw mode, for one payment of $5. No account and no subscription. Everything
             else stays free and unmetered.

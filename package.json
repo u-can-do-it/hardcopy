@@ -1,5 +1,5 @@
 {
-  "name": "pagepdf",
+  "name": "hardcopy",
   "private": true,
   "version": "0.1.0",
   "description": "Save any page as a PDF with real, searchable text that looks like the screen.",

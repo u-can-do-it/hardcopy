@@ -1,4 +1,4 @@
-# pagepdf
+# Hardcopy
 
 Save any page as a PDF with **real, searchable text** that looks like the screen.
 Free, unlimited, no account, no export counter.

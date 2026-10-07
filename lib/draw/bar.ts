@@ -890,7 +890,7 @@ export function mountBar(options: BarOptions): BarHandle {
   // pattern - one tab stop, and no arrow keys to move within it - would leave
   // most of the bar unreachable, which is worse than none of it.
   root.setAttribute("role", "toolbar");
-  root.setAttribute("aria-label", "pagepdf annotate tools");
+  root.setAttribute("aria-label", "Hardcopy drawing tools");
 
   const grip = document.createElement("div");
   grip.className = "grip";

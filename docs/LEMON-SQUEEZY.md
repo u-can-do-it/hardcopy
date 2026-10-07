@@ -58,7 +58,7 @@ Then, on a production build: buy through the checkout in **test mode**, paste th
 key into the popup's Pro dialog, and confirm Draw unlocks without reopening the
 popup - the button loses its "Pro" badge, and pressing it puts the drawing bar
 on the page. Check the activation shows up in the dashboard under the
-`instance_name` the extension sends (`pagepdf macOS` and so on).
+`instance_name` the extension sends (`Hardcopy macOS` and so on).
 
 To exercise the cache without waiting a week, age it by hand in the extension's
 service worker console:

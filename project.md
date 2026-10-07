@@ -1,6 +1,6 @@
 # PROJECT.md — Page to PDF Extension
 
-**Working name:** `pagepdf` (final name TBD — **not** "Web to PDF", three products already use it)
+**Name:** Hardcopy (the working name was `pagepdf`; **not** "Web to PDF", three products already use it)
 **Timebox:** two weekends. Whatever exists on the second Sunday evening gets published.
 **Positioning:** _the one that doesn't count your exports._ Real text, real look, no nag. One click by default; the print dialog, with no debugger at all, for anyone who would rather.
 

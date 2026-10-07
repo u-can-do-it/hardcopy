@@ -3,8 +3,9 @@
 Filled in as far as the code allows; the rest needs decisions, not code. Pricing
 and the licence key flow are in [LEMON-SQUEEZY.md](LEMON-SQUEEZY.md).
 
-- **Name:** TBD. "pagepdf" is the working name. Not "Web to PDF" - three
-  products already use it (§1).
+- **Name:** Hardcopy. The manifest name is "Hardcopy - Save Page as PDF", so
+  the store title carries the search phrase. "pagepdf" was the working name;
+  not "Web to PDF" - three products already use it (§1).
 - **Short description (<=132 chars):**
   `Save any page as a PDF with real, searchable text that looks like the screen. Free, unlimited, no nagging.`
   (105 characters.)

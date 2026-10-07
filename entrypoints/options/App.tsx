@@ -162,7 +162,7 @@ export function App() {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-8 pb-14">
-      <h1 className="text-xl font-semibold">pagepdf settings</h1>
+      <h1 className="text-xl font-semibold">Hardcopy settings</h1>
       <p className="text-muted-foreground mt-1 mb-6 text-sm">
         These are the defaults for every export. The popup's two toggles are the same settings
         and stay in sync with this page.

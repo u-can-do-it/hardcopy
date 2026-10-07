@@ -91,7 +91,7 @@ async function post(path: string, body: Record<string, string>): Promise<unknown
 function instanceName(): string {
   const ua = navigator.userAgent;
   const os = /Mac/.test(ua) ? "macOS" : /Win/.test(ua) ? "Windows" : /Linux/.test(ua) ? "Linux" : "";
-  return `pagepdf ${os}`.trim();
+  return `Hardcopy ${os}`.trim();
 }
 
 export type ActivateResult = { ok: true } | { ok: false; error: string };
@@ -172,7 +172,7 @@ export async function isPro(): Promise<boolean> {
   if (LAUNCH_FREE_FOR_ALL) return true;
 
   if (DEV_UNLOCK_PRO) {
-    console.warn("[pagepdf] DEV_UNLOCK_PRO is on - Pro is unlocked without a key.");
+    console.warn("[hardcopy] DEV_UNLOCK_PRO is on - Pro is unlocked without a key.");
     return true;
   }
 

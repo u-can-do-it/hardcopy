@@ -23,7 +23,7 @@ export const savedFlash = signal(false);
 /**
  * What the filename preview renders against: a made-up page, because the
  * options page has no page to speak of - it *is* the tab, and previewing
- * "pagepdf settings" would be a worse example than the sample.
+ * "Hardcopy settings" would be a worse example than the sample.
  */
 export const SAMPLE_PAGE = {
   title: "How Chrome prints a web page",
