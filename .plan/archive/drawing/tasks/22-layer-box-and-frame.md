@@ -33,7 +33,7 @@ a dashed frame with eight handles over the open editor.
 - and the editor commits before every capture, which clears it (task 23's job).
 
 `@media print { display: none }` is **not** an option: the Pro path emulates
-screen media (README Deviation 11).
+screen media (DEVIATIONS.md Deviation 11).
 
 The handles' `data-zone` and `cursor` are for the pointer cursor only.
 `frameZoneAt` stays the authority on what a press hit - do not hit-test the

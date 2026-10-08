@@ -1,5 +1,5 @@
 /**
- * Makes Blob URLs for the service worker (PROJECT.md §3, §10.1) - for the
+ * Makes Blob URLs for the service worker (project.md §3, §10.1) - for the
  * exported PDF, and for a screenshot PNG, which arrive the same way.
  *
  * This document exists for one reason: a service worker has no

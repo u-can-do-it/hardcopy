@@ -12,10 +12,11 @@ The docs below are history as much as reference. For what the product does
 (`isPro()`, `effectivePageMode`, `settings.exportMode`) and answer from them.
 When a doc and the code disagree, trust the code and fix the doc.
 
-- `README.md` — state of the code, the message flow, and a **Deviations** list
-  explaining every place the code knowingly departs from the brief. Each entry
-  is a decision with a measurement behind it. Read the relevant one before
-  changing that area; do not "fix" a deviation back to the brief.
+- `README.md` — short description and local setup.
+- `docs/ARCHITECTURE.md` — layout, message flow, how each feature works, and
+  the numbered **Decisions**, each with the measurement or reason behind it.
+  Read the relevant one before changing that area; do not undo a decision
+  without new evidence.
 - `project.md` — the product brief (tiers, permissions, §9 manual test matrix).
 - `BACKLOG.md` — what was deferred.
 
@@ -91,7 +92,7 @@ copies of its types). pnpm 11 reads overrides and build-script approval from
 That map replaces the inherited one rather than merging, so WXT's own aliases
 are repeated there — keep them if you touch it.
 
-There is no `lib/utils.ts`; `cn` comes from the `cn` package (README Deviation 6).
+There is no `lib/utils.ts`; `cn` comes from the `cn` package (docs/ARCHITECTURE.md Decision 6).
 
 ## What a unit test cannot tell you
 
@@ -114,9 +115,9 @@ worker + reviewer per task. See `.claude/commands/`, and `docs/SPEC-DRIVEN.md`
 for the whole loop - including the docs task that ends every pass, which is not
 optional, and the append-only amendment convention for contracts.
 
-Briefs live in `docs/features/`. Batch was dropped from the product, code and
-plan both. Finished plans move to `.plan/archive/<feature>/`; a `.plan/contracts.md §N`
-citation in a code comment resolves there - see `.plan/README.md`.
+Finished plans move to `.plan/archive/<feature>/`, brief included; a
+`.plan/contracts.md §N` citation in a code comment resolves there - see
+`.plan/README.md`. Batch was dropped from the product, code and plan both.
 
 What is left before v0.1 ships is **not code**: a hosted privacy policy, store
 screenshots, the listing copy and the submission itself. `BACKLOG.md`'s scope

@@ -56,7 +56,7 @@ export const LABEL_FONT_FAMILY: string =
 /**
  * Injected with `injectUnconditionalCss()`, never as `media="print"`: a
  * `media="print"` sheet does not match while the one-click path emulates
- * screen media (README Deviation 11).
+ * screen media (ARCHITECTURE.md Decision 11).
  *
  * Forces `print-color-adjust: exact` on our subtree regardless of the
  * `exactColors` setting, so a user who turned that off does not get

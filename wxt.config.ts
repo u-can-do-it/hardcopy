@@ -21,7 +21,7 @@ import {
  */
 const shipped = new Set<string>();
 
-// Pinned to wxt ~0.20.x on purpose (see PROJECT.md §2). Do not float to @latest:
+// Pinned to wxt ~0.20.x on purpose (see project.md §2). Do not float to @latest:
 // 0.21 moves entrypoint helpers again, and this code is written against 0.20.
 export default defineConfig({
   manifest: {
@@ -93,7 +93,7 @@ export default defineConfig({
     // derives both from the HTML, so setting them here would be ignored.
   },
 
-  // Firefox gets its own path later (tabs.saveAsPDF) - PROJECT.md §1.
+  // Firefox gets its own path later (tabs.saveAsPDF) - project.md §1.
   browser: "chrome",
 
   hooks: {

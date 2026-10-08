@@ -33,7 +33,7 @@ The host hangs off `documentElement`, behind a **closed** shadow root, matching
 `entrypoints/select-area.ts`. Inject `LAYER_CSS` with
 `injectUnconditionalCss()` from `lib/dom/print-css.ts` - never as
 `media="print"`, which does not match while the Pro path emulates screen media
-(README Deviation 11).
+(DEVIATIONS.md Deviation 11).
 
 `setLive()` updates one element in place; `render()` rebuilds the committed
 shapes. Do not re-render the committed list on every pointer move.

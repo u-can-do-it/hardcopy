@@ -1,6 +1,6 @@
 /**
  * Settings live in chrome.storage.sync under one key, so they follow the
- * user's profile across devices (PROJECT.md §2).
+ * user's profile across devices (project.md §2).
  *
  * `mergeSettings` is pure and validating: anything stored by an older version,
  * or corrupted, degrades to the default for that one field instead of throwing
@@ -16,16 +16,16 @@ export const DEFAULT_SETTINGS: Settings = {
     hideSticky: true,
     stickyMinHeight: 40,
     hideSelectors: [],
-    expandDetails: true,
-    unlockScrollContainers: true,
+    expandDetails: false,
+    unlockScrollContainers: false,
     loadLazyImages: true,
     addHeader: false,
     exactColors: true,
   },
   filenameTemplate: "{title}-{date}",
   exportMode: "screen",
-  pageMode: "paginated",
-  imageFormat: "webp",
+  pageMode: "single",
+  imageFormat: "jpeg",
 };
 
 function bool(v: unknown, fallback: boolean): boolean {
@@ -68,6 +68,9 @@ function imageFormat(v: unknown): ImageFormat {
  * rather than failing - the user asked for a PDF, and paginated is the honest
  * thing to hand them - and asking for single-page CSS there would only unsettle
  * the layout of a document that is going to be paginated regardless.
+ *
+ * The toggles can no longer store that pair (`exportModePatch`), so this is the
+ * backstop for settings written by an older version, and for a per-run override.
  */
 export function effectivePageMode(
   stored: PageMode,
@@ -129,6 +132,24 @@ export interface SettingsPatch {
   exportMode?: ExportMode;
   pageMode?: PageMode;
   imageFormat?: ImageFormat;
+}
+
+/*
+ * "Single long page" and "Use the print dialog" exclude each other: the dialog
+ * takes paper size from its own dropdown and discards `@page { size }`. So
+ * switching either one on switches the other off, in the same write. Switching
+ * either one off leaves the other alone - nothing about paginated sheets asks
+ * for the dialog, or about one click for a single page.
+ */
+
+/** The write for the "Use the print dialog" toggle. */
+export function exportModePatch(mode: ExportMode): SettingsPatch {
+  return mode === "print" ? { exportMode: "print", pageMode: "paginated" } : { exportMode: mode };
+}
+
+/** The write for the "Single long page" toggle. */
+export function pageModePatch(mode: PageMode): SettingsPatch {
+  return mode === "single" ? { pageMode: "single", exportMode: "screen" } : { pageMode: mode };
 }
 
 /** Read-modify-write one field group. Returns the settings as they now stand. */

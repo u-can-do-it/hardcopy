@@ -16,6 +16,8 @@ import type { ImageFormat } from "../types";
 
 export interface ImageEncoding {
   format: ImageFormat;
+  /** What the user sees: the popup's "Screenshot (WebP)" and the options page. */
+  label: string;
   /** For `OffscreenCanvas.convertToBlob` and the download Blob alike. */
   mime: string;
   extension: string;
@@ -61,6 +63,7 @@ export const CANVAS_MAX_EDGE = 65_535;
 const ENCODINGS: Record<ImageFormat, ImageEncoding> = {
   webp: {
     format: "webp",
+    label: "WebP",
     mime: "image/webp",
     extension: ".webp",
     quality: WEBP_QUALITY,
@@ -69,6 +72,7 @@ const ENCODINGS: Record<ImageFormat, ImageEncoding> = {
   },
   jpeg: {
     format: "jpeg",
+    label: "JPEG",
     mime: "image/jpeg",
     extension: ".jpg",
     quality: JPEG_QUALITY,
@@ -77,6 +81,7 @@ const ENCODINGS: Record<ImageFormat, ImageEncoding> = {
   },
   png: {
     format: "png",
+    label: "PNG",
     mime: "image/png",
     extension: ".png",
     opaque: false,
@@ -84,7 +89,7 @@ const ENCODINGS: Record<ImageFormat, ImageEncoding> = {
   },
 };
 
-/** Never throws: an unknown format from older settings degrades to WebP. */
+/** Never throws: an unknown format from older settings degrades to the default, JPEG. */
 export function encodingFor(format: ImageFormat | undefined): ImageEncoding {
-  return ENCODINGS[format as ImageFormat] ?? (ENCODINGS.webp as ImageEncoding);
+  return ENCODINGS[format as ImageFormat] ?? (ENCODINGS.jpeg as ImageEncoding);
 }

@@ -1,5 +1,5 @@
 /**
- * Where we are and are not allowed to operate (PROJECT.md §10.3).
+ * Where we are and are not allowed to operate (project.md §10.3).
  *
  * Both export paths need this: the print path cannot inject a script into a
  * privileged page, and the one-click path additionally cannot attach the

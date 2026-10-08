@@ -1,5 +1,5 @@
 /**
- * Page.printToPDF parameter builder (PROJECT.md §4.2 step 6).
+ * Page.printToPDF parameter builder (project.md §4.2 step 6).
  *
  * Pure module - covered by tests/print-options.test.ts.
  *
@@ -27,12 +27,9 @@ export const DOCUMENT_HEIGHT_EXPRESSION =
 /**
  * Tallest single sheet we will ask Chromium for.
  *
- * PROJECT.md §4.2 puts the "practical ceiling" at about 200in, and that is
- * wrong - it was the only reason ordinary pages came back split. Measured on
- * Chrome 152, one page of the requested height came out intact at every size
- * tried: 190, 200, 213, 250, 300, 400 and 500 in. A competitor's export of the
- * same news homepage is a single 213.18in page, which the 200in figure says is
- * impossible.
+ * Measured on Chrome 152, one page of the requested height came out intact at
+ * every size tried: 190, 200, 213, 250, 300, 400 and 500 in - there is no
+ * ~200in "practical ceiling" (ARCHITECTURE.md Decision 4).
  *
  * 500in (48,000px) is where this stops, not because Chromium refuses but
  * because rendering and memory grow with it - a 213in page already weighs

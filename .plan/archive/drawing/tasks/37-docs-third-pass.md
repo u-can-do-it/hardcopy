@@ -128,7 +128,7 @@ removed under it, and the cover is opaque because something is.
    as the `<select>` that §30 escalated, but unfixable from where the walker
    stands rather than one word away. Low severity in practice (a covered
    `<li>`'s marker survives; a `content: attr(data-...)` leak is rare), and it
-   belongs in README Deviation 20's limits list beside the cross-origin iframe.
+   belongs in DEVIATIONS.md Deviation 20's limits list beside the cross-origin iframe.
    Say which of the two is which: the iframe is somebody else's document, this
    is our own document painting text that has no node.
 

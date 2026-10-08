@@ -375,7 +375,7 @@ const ACTION_ICONS: Readonly<Record<BarAction, { label: string; icon: string }>>
   redo: { label: "Redo", icon: ICON_REDO },
   clear: { label: "Clear all marks", icon: ICON_CLEAR },
   "save-pdf": { label: "Save as PDF", icon: ICON_SAVE_PDF },
-  "save-png": { label: "Save as PNG", icon: ICON_SAVE_PNG },
+  "save-png": { label: "Save as image", icon: ICON_SAVE_PNG },
   "save-area": { label: "Save selected area", icon: ICON_SAVE_AREA },
   exit: { label: "Done - leave annotate mode", icon: ICON_X },
 };

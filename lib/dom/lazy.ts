@@ -1,5 +1,5 @@
 /**
- * Make lazy-loaded media exist before we print it (PROJECT.md §4.1).
+ * Make lazy-loaded media exist before we print it (project.md §4.1).
  *
  * Two mechanisms cover almost everything in the wild: native `loading="lazy"`,
  * which we switch to eager, and IntersectionObserver-based loaders, which only

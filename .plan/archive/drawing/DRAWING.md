@@ -1,7 +1,7 @@
 # DRAWING.md - mark the page up before you save it (proposal)
 
 **Status:** proposal. Nothing here is implemented. Written against the tree at
-`4399ad7`, and against PROJECT.md's rules (§3 architecture, §5 permissions,
+`4399ad7`, and against project.md's rules (§3 architecture, §5 permissions,
 §9 test matrix).
 
 ---
@@ -26,8 +26,8 @@ outputs the codebase already has:
 
 No new permissions. `activeTab` + `scripting` + `storage` are already declared
 and already cover an injected script that draws in the tab you clicked on.
-Nothing new appears on the install prompt - which, given Deviation 1 in the
-README, matters more here than in most projects.
+Nothing new appears on the install prompt - which, given Deviation 1 in
+`docs/DEVIATIONS.md`, matters more here than in most projects.
 
 And the marks pass the project's own test: SVG `<text>` prints as **real text**,
 so a label you type is findable with Ctrl+F in the exported PDF (§9).
@@ -273,5 +273,5 @@ else in this document is the same either way.
 
 > **Answered, twice.** It shipped with the split above - five free tools,
 > symbols and labels Pro - and then the tiers turned around: Draw mode is now
-> the Pro feature, all of it, and everything else is free. README Deviations
+> the Pro feature, all of it, and everything else is free. DEVIATIONS.md Deviations
 > 15 and 24.

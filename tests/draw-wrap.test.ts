@@ -207,7 +207,7 @@ describe("wrapLines", { timeout: HANG_TIMEOUT_MS }, () => {
   it("never splits a word that would have fitted, over a spread of texts and widths", () => {
     // The invariant itself, asserted rather than sampled: contracts §18 ("words
     // are kept whole where they fit") and the Ctrl+F promise design §13.3 puts
-    // in the README ("a word is never split by a soft wrap, so single words
+    // in docs/ARCHITECTURE.md ("a word is never split by a soft wrap, so single words
     // always match").
     //
     // Order-aware, not a substring scan, because a scan flags lines a soft wrap

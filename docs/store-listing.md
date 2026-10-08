@@ -1,11 +1,9 @@
-# Store listing draft (PROJECT.md §11)
+# Store listing draft (project.md §11)
 
-Filled in as far as the code allows; the rest needs decisions, not code. Pricing
-and the licence key flow are in [LEMON-SQUEEZY.md](LEMON-SQUEEZY.md).
+Pricing and the licence key flow are in [LEMON-SQUEEZY.md](LEMON-SQUEEZY.md).
 
 - **Name:** Hardcopy. The manifest name is "Hardcopy - Save Page as PDF", so
-  the store title carries the search phrase. "pagepdf" was the working name;
-  not "Web to PDF" - three products already use it (§1).
+  the store title carries the search phrase.
 - **Short description (<=132 chars):**
   `Save any page as a PDF with real, searchable text that looks like the screen. Free, unlimited, no nagging.`
   (105 characters.)
@@ -18,12 +16,11 @@ and the licence key flow are in [LEMON-SQUEEZY.md](LEMON-SQUEEZY.md).
 
 ## Permission justifications
 
-**Six permissions ship, all required - there are no optional ones.** One-click
-PDF export, the free default, and screenshots both use `debugger` (Deviations 13
-and 24), and both write their own files, which is what `downloads` and
-`offscreen` are for. Check this list against `wxt.config.ts` before every
-submission - it is the one document where being out of date is a false
-statement to a reviewer rather than a stale note.
+**Six permissions, all required - there are no optional ones.** One-click PDF
+export, the free default, and screenshots both use `debugger` (ARCHITECTURE.md
+Decisions 13 and 24), and both write their own files, which is what `downloads`
+and `offscreen` are for. Check this list against `wxt.config.ts` before every
+submission - out of date here is a false statement to a reviewer.
 
 - **activeTab** - runs the page pre-processing (hiding sticky bars, expanding
   collapsed sections, triggering lazy images), and `window.print()` when the
@@ -45,6 +42,6 @@ statement to a reviewer rather than a stale note.
 
 > **Say in the listing that Chrome shows a yellow "is debugging this browser"
 > bar while a one-click export runs.** `debugger` is declared rather than requested
-> (Deviation 1), so the install prompt arrives before any UI of ours can explain
+> (Decision 1), so the install prompt arrives before any UI of ours can explain
 > it. The popup's hint line carries that sentence for people already installed;
 > the listing has to carry it for everyone else.

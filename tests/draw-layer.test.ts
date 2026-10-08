@@ -23,7 +23,7 @@ import type { NodeSpec } from "@/lib/draw/render";
  * (`.plan/design.md` §4.1, plus point 4 in layer.ts's own header):
  *
  * - `position: absolute`, because Chrome repaints a fixed element on *every*
- *   printed sheet - README Deviation 7, and the reason lib/dom/hide-fixed.ts
+ *   printed sheet - ARCHITECTURE.md Decision 7, and the reason lib/dom/hide-fixed.ts
  *   exists - so a fixed layer would stamp one arrow onto all 14 pages.
  * - `overflow: clip` on a wrapper sized to exactly the document, because a
  *   stroke dragged past the bottom edge must not grow `scrollHeight`. That

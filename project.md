@@ -1,56 +1,55 @@
-# PROJECT.md — Page to PDF Extension
+# project.md - Hardcopy
 
-**Name:** Hardcopy (the working name was `pagepdf`; **not** "Web to PDF", three products already use it)
-**Timebox:** two weekends. Whatever exists on the second Sunday evening gets published.
+**Name:** Hardcopy (manifest: "Hardcopy - Save Page as PDF"). Working name `pagepdf`, kept in code identifiers. Not "Web to PDF" - three products already use it.
 **Positioning:** _the one that doesn't count your exports._ Real text, real look, no nag. One click by default; the print dialog, with no debugger at all, for anyone who would rather.
+
+The code is the authority. The reasons behind non-obvious choices are in `docs/ARCHITECTURE.md`.
 
 ---
 
 ## 1. What it does
 
-Turns the current browser tab into a PDF with **selectable, searchable text** (vector, not a screenshot) that **looks like the page on screen**, not like the site's print stylesheet. Optionally as one long page instead of A4 sheets.
+Turns the current tab into a PDF with **selectable, searchable text** (vector, not a screenshot) that **looks like the page on screen**, not like its print stylesheet. Optionally as one long page instead of A4 sheets.
 
-> **This file is the brief, kept in step with the code.** Where the two ever
-> disagree, `README.md`'s Deviations list is the record of which one won and
-> why. Sections marked *shipped* describe what exists today.
+### Free - unlimited, no account
 
-### Free (forever, unlimited, no account)
+Everything except Draw mode (Decision 24).
 
-Everything except Draw mode *(README Deviation 24)*.
+- **One-click export** - the default (`exportMode: "screen"`): no dialog, straight to Downloads, over CDP. Chrome shows its yellow "is debugging this browser" bar while it runs.
+- **Screen look** - the page's _screen_ CSS, not `@media print`.
+- **Single long page** - no page breaks, on by default; one-click path only (Decision 9).
+- **The print dialog** (`exportMode: "print"`) - the browser's native print pipeline. Never attaches `debugger`, never shows the yellow bar - that is what it is for.
+- Pre-processing: hide sticky headers/footers/cookie banners, expand `<details>`, scroll to trigger lazy images, optional title + URL + date header.
+- A curtain over the pre-processing sweep (Decision 22).
+- Full-page and drag-a-region screenshots (Decision 13).
+- Four keyboard shortcuts for the four things the popup does (Decision 21).
 
-- **One-click export** — no print dialog, straight to Downloads, over CDP; the default *(shipped)*. Chrome shows its yellow "is debugging this browser" bar while it runs.
-- **Screen look** — PDF uses the page's _screen_ CSS, not `@media print` *(shipped)*
-- **Single long page** — no page breaks, on the one-click path *(shipped — Deviation 9 says why the print dialog cannot)*
-- **The print dialog**, one switch away (`exportMode: "print"`): the page through the browser's native print pipeline *(shipped)*. It requires **no** `debugger` permission and never shows the yellow bar — that is what it is for.
-- Pre-processing before print: hide sticky headers/footers/cookie banners, expand `<details>`, trigger lazy-loaded images by scrolling, optional title + URL + date header *(shipped)*
-- A curtain over that pre-processing sweep, so the page scrolling itself does not read as a glitch *(shipped — Deviation 22)*
-- Full-page and drag-a-region screenshots *(shipped — not in the original brief; Deviation 13)*
-- Four keyboard shortcuts for the four things the popup does *(shipped — Deviation 21)*
+### Pro - one-time $5, lifetime, per user
 
-### Pro — one-time $5 (lifetime, per user)
+- **Draw mode, all of it** - pencil, highlighter, line, rectangle, ellipse; fill modes, including covers that remove the text underneath from the export (Decision 20); seven symbols including an auto-numbered pin; text labels that stay searchable in the PDF. Gated once, at `ANNOTATE start` (Decision 15).
+- Draw needs no permission of its own: the marks are SVG in the page and reach whichever export path is chosen.
 
-- **Draw mode, all of it** — mark the page up before saving: pencil, highlighter, line, rectangle, ellipse; the fill modes, including covers that really remove the text underneath from the export *(Deviation 20)*; seven symbols including an auto-incrementing numbered pin; and text labels typed in place that stay searchable in the PDF *(shipped — the gate is Deviation 15)*
-- Draw mode needs no permission of its own — not `debugger` either: the marks are SVG in the page, and they reach whichever export path is chosen.
+**Launch period:** `LAUNCH_FREE_FOR_ALL` (`lib/constants.ts`) is `true` and ships. `isPro()` answers true for everyone, so Draw is free too, and the popup's "Pro?" link and the options page's licence card are hidden. Turning it off is how Pro comes back.
 
 ### Out of scope
 
-Editing PDFs, OCR, cloud storage, accounts, analytics, Firefox (later — Firefox has `tabs.saveAsPDF()` and deserves its own path), Safari.
+Editing PDFs, OCR, cloud storage, accounts, analytics, Safari. Firefox later, on its own path (`tabs.saveAsPDF()`).
 
 ---
 
 ## 2. Stack
 
-| Concern           | Choice                                                                   | Notes                                                                                                                                          |
-| ----------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework         | **WXT** (`~0.20.x`, pinned)                                              | Vite-based, MV3, file-based entrypoints, auto-imports, `wxt zip` for store upload. Plasmo is in maintenance mode; CRXJS is a bare Vite plugin. |
-| Language          | TypeScript strict                                                        |                                                                                                                                                |
-| UI                | Vanilla TS + small CSS (or Preact if the popup grows)                    | Popup is ~5 controls; don't ship React for it                                                                                                  |
-| Licensing         | **Lemon Squeezy license keys** (merchant of record)                      | no accounts, no login; key pasted once, stored in `storage.sync`; see §6                                                                       |
-| Storage           | `chrome.storage.sync` (settings, licence), `chrome.storage.local` (drawing bar prefs) |                                                                                                                   |
-| Tests             | Vitest for pure helpers; manual test matrix (see §9)                     |                                                                                                                                                |
-| Publishing        | `wxt zip` → Chrome Web Store dev console (manual for v0.1)               |                                                                                                                                                |
+| Concern    | Choice                                                                    |
+| ---------- | ------------------------------------------------------------------------- |
+| Framework  | **WXT 0.20.27**, pinned exactly (0.21 moves the entrypoint helpers)       |
+| Language   | TypeScript strict                                                         |
+| UI         | Preact + shadcn/ui + Tailwind (Decision 5)                               |
+| Licensing  | Lemon Squeezy licence keys, merchant of record - see §6                   |
+| Storage    | `chrome.storage.sync` (settings, licence), `chrome.storage.local` (drawing bar prefs) |
+| Tests      | Vitest for `lib/`; manual matrix in §9                                    |
+| Publishing | `pnpm zip` -> Chrome Web Store dev console                                |
 
-**WXT gotcha:** since 0.20.x, `defineBackground` / `defineContentScript` are imported from `wxt/utils/define-background` and `wxt/utils/define-content-script`, not `wxt/sandbox`. Pin the version; don't scaffold with a floating `@latest`.
+**WXT gotcha:** since 0.20, `defineBackground` / `defineContentScript` come from `wxt/utils/define-background` and `wxt/utils/define-content-script`, not `wxt/sandbox`. Never scaffold with a floating `@latest`.
 
 ---
 
@@ -58,274 +57,187 @@ Editing PDFs, OCR, cloud storage, accounts, analytics, Firefox (later — Firefo
 
 ```
 entrypoints/
-  background.ts        service worker: orchestrates exports, owns CDP session, downloads
-  popup/               main UI: mode selector, options, Export button, Pro upsell (quiet)
-  options/             settings page (defaults, element-hiding rules, filename template)
-  content.ts           print path: pre-process DOM + window.print(); also used by one-click for pre-scroll
-  offscreen.html/.ts   creates Blob URLs for large downloads (service workers can't)
+  background.ts     service worker: orchestrates exports, screenshots, Draw; downloads
+  popup/            Export PDF, Draw, two screenshot buttons, prep toggles
+  options/          defaults, element-hiding rules, filename template, export mode, licence
+  prepare.ts        injected pre-processing (and window.print() on the print path)
+  annotate.ts       injected Draw mode
+  select-area.ts    injected region-screenshot selector
+  offscreen/        Blob URLs for downloads (service workers can't)
 lib/
-  cdp/                 thin typed wrappers over chrome.debugger commands
-  pdf/                 printToPDF options builder, single-page sizing
-  dom/                 pre-processing helpers (hide fixed elements, expand, lazy-load scroll)
-  license/             license-key activate/validate wrapper, cached status in storage.sync, offline grace
-  filename.ts          `{title}-{date}.pdf` templating, sanitising
+  cdp/              typed chrome.debugger wrappers - the only module that touches it
+  pdf/              printToPDF options, single-page sizing
+  capture/          screenshot planning, stitching, formats
+  dom/              pre-processing helpers, covers
+  draw/             Draw mode (layer, bar, shapes) - no tier logic
+  license/          activate / validate / deactivate, cached isPro()
+  settings.ts, filename.ts, commands.ts, urls.ts, ...
 ```
 
-Message flow: popup → background (`EXPORT { options }`; the background reads `settings.exportMode` itself) → background drives the tab (content script for DOM prep, CDP for one-click) → background produces bytes → offscreen doc makes a Blob URL → `chrome.downloads.download`.
+Flow: popup or shortcut -> background (`EXPORT`; the background reads `settings.exportMode` itself) -> injected script prepares the page -> CDP capture or `window.print()` -> bytes -> offscreen Blob URL -> `chrome.downloads.download`.
 
 Rules:
 
-- All CDP calls live in `lib/cdp`. Nothing else touches `chrome.debugger`.
-- Background never assumes the tab is still there; every step re-checks `tabId` and handles "tab closed" gracefully.
-- The print path never attaches `debugger` (§5). It is the way out of the yellow bar, and only that while it stays CDP-free.
+- All CDP calls live in `lib/cdp`.
+- The background never assumes the tab is still there; every step re-checks `tabId`.
+- The print path never attaches `debugger` (§5).
+- Scripts are injected on demand, never declared (Decision 3).
 
 ---
 
 ## 4. How each mode works
 
-### 4.1 Print dialog — native print (`exportMode: "print"`)
+### 4.1 Print dialog (`exportMode: "print"`)
 
-1. Content script runs pre-processing (user-configurable):
-   - hide `position: fixed|sticky` elements taller than 40px (cookie bars, headers) — collect via `getComputedStyle` walk
-   - open all `<details>`, remove `overflow: hidden` from scroll containers
-   - scroll to bottom in steps to fire lazy loaders, then back to top
-   - optionally prepend a small header block (title / URL / date)
-2. Inject `<style media="print">` with user's overrides (default: `* { -webkit-print-color-adjust: exact }`)
-3. `window.print()`. The user picks "Save as PDF" and ticks "Background graphics".
-4. `afterprint` → undo DOM changes (restore hidden elements).
+1. Injected pre-processing (each step user-configurable):
+   - hide `position: fixed|sticky` elements taller than 40px - except any holding >20% of the page's text (Decision 7)
+   - open `<details>`, unlock `overflow: hidden` scroll containers (both off by default)
+   - scroll to the bottom in steps to fire lazy loaders, then back
+   - optionally prepend a title / URL / date header
+2. Inject `<style media="print">` (default: `* { -webkit-print-color-adjust: exact }`).
+3. Reply to the background, **then** `window.print()` - it blocks the renderer while the dialog is open.
+4. `afterprint` -> undo every DOM change.
 
-Limits: paginated A4/Letter, print CSS still applies (we only nudge it), one dialog per export. That's the print-dialog deal: no `debugger`, no yellow bar, and it's still vector text.
+Paginated only (Decision 9), print CSS still applies. The deal: no `debugger`, no yellow bar, still vector text.
 
-### 4.2 One-click, screen look (CDP) — the default (`exportMode: "screen"`)
+### 4.2 One-click, screen look (`exportMode: "screen"`, the default)
 
-1. `chrome.permissions.request({ permissions: ['debugger'] })` on first use; explain why in the popup _before_ the browser prompt. *(Not possible — `debugger` cannot be optional, so it is declared and the prompt is the install prompt: README Deviation 1. The popup's hint line says what the yellow bar is.)*
-2. `chrome.debugger.attach({ tabId }, '1.3')`
-3. Content-script pre-processing as in Free (scroll for lazy load).
-4. `Emulation.setEmulatedMedia({ media: 'screen' })` ← the whole trick. Page renders with screen CSS.
-5. `Page.getLayoutMetrics` → `cssContentSize` for sizing.
-6. `Page.printToPDF` with:
-   ```ts
-   {
-     printBackground: true,
-     preferCSSPageSize: false,
-     paperWidth:  cssContentSize.width  / 96,   // inches
-     paperHeight: pageMode === 'single' ? cssContentSize.height / 96 : 11.69, // A4 = 8.27 x 11.69
-     marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0,
-     displayHeaderFooter: false,
-     transferMode: 'ReturnAsStream'          // avoids huge base64 strings for big pages
-   }
-   ```
-7. Read stream via `IO.read` chunks → `Uint8Array` → offscreen Blob URL → download.
+1. `debugger` is a declared permission (Decision 1); the popup's hint line explains the yellow bar.
+2. `chrome.debugger.attach({ tabId }, "1.3")`.
+3. Pre-processing as in §4.1.
+4. `Emulation.setEmulatedMedia({ media: "screen" })` - the whole trick.
+5. Measure the page (Decisions 10, 12).
+6. `Page.printToPDF`: `printBackground: true`, zero margins, no header/footer, page width from the content, height A4 or the full page in single-page mode, `transferMode: "ReturnAsStream"`.
+7. `IO.read` chunks -> `Uint8Array` -> offscreen Blob URL -> download.
 8. `chrome.debugger.detach` in `finally`. Always.
 
-**Single-page trap:** Chromium refuses absurd paper sizes (practical ceiling ≈ 200 in ≈ 19,200 px). For taller pages, fall back to chunks of ≤ 190 in and merge with `pdf-lib`. Show a note in the result ("page was split into 3 sheets — it was 31,000 px tall"). *(Only the note survived. The ceiling is 500 in, and past it `printToPDF` paginates equal slices by itself, so nothing is merged — README Deviation 4.)*
-
-**Why this beats the competitors:** real text + screen appearance + no dialog. Competing free extensions either rasterise (html2canvas fallbacks) or apply print CSS.
+**Single-page ceiling:** 500in (48,000px). Past it `printToPDF` paginates equal slices itself - no merge - and the result notes the split (Decision 4).
 
 ---
 
 ## 5. Permissions
 
-`manifest` (via `wxt.config.ts`):
-
 ```ts
-// as shipped, in wxt.config.ts
-permissions: ['activeTab', 'scripting', 'storage', 'debugger', 'downloads', 'offscreen'],
-host_permissions: []          // none. activeTab covers the current tab on click.
+// wxt.config.ts
+permissions: ["activeTab", "scripting", "storage", "debugger", "downloads", "offscreen"],
+host_permissions: [],   // activeTab covers the clicked tab
 ```
 
-There are no optional permissions: everything the extension uses is declared.
+No optional permissions. `debugger` is required: Chrome forbids it as optional (Decision 1), and the free default needs it - one-click export and screenshots run over CDP. Declared from the first release, so no update adds a permission. The print path never attaches it; §9 checks that.
 
-**`debugger` is required, not optional.** Chrome will not grant it through
-`permissions.request()` at runtime (README Deviation 1), and the free default
-needs it anyway: one-click export and screenshots both run over CDP. So it is
-declared from the first release — one listing, one review queue, and no
-re-consent prompt on a later update, because no update adds it. The print
-path never attaches it, and that invariant is what the §9 matrix checks rather
-than assumes.
+Store justification text (keep it true):
 
-Store justification text (write it once, keep it true):
-
-- `activeTab`, `scripting` — run DOM pre-processing, and `window.print()` when the print dialog is chosen, on the tab the user clicked on.
-- `downloads` — save the PDF or the screenshot.
-- `storage` — settings, the licence key, and the drawing bar's preferences.
-- `offscreen` — create Blob URLs for downloads (service workers can't).
-- `debugger` (required) — one-click PDF export and screenshots: used exclusively for `Page.printToPDF`, `Emulation.setEmulatedMedia` and `Page.captureScreenshot` on tabs the user chose to export or photograph; attached only for the duration of that one export, detached immediately after; never reads network traffic or cookies. Not attached at all when the user picks the print dialog.
-
-Review with `debugger` is slower and sometimes bounces. The original plan was to keep it out of v0.1 entirely and add it with Pro in v0.2; that is no longer the shape of the build, because one-click export and screenshots are free and use it (README Deviations 13 and 24). So v0.1 declares it and carries the slower review once, and nothing planned adds a permission after it — the better of the two update stories in any case.
+- `activeTab`, `scripting` - run DOM pre-processing, and `window.print()` when the print dialog is chosen, on the tab the user clicked on.
+- `downloads` - save the PDF or the screenshot.
+- `storage` - settings, the licence key, and the drawing bar's preferences.
+- `offscreen` - create Blob URLs for downloads (service workers can't).
+- `debugger` (required) - one-click PDF export and screenshots: used only for `Page.printToPDF`, `Emulation.setEmulatedMedia` and `Page.captureScreenshot` on tabs the user chose to export or photograph; attached for that one export, detached immediately after; never reads network traffic or cookies. Not attached at all when the user picks the print dialog.
 
 ---
 
-## 6. Licensing — license keys, no accounts, no login
+## 6. Licensing - keys, no accounts, no login
 
-**Principle:** the user never creates an account and never logs in. Pro is unlocked by a license key that arrives by email after purchase and is pasted once into the popup.
+Pro is unlocked by a licence key emailed after purchase and pasted once. Dormant during the launch period (§1).
 
-### 6.1 v0.2 — vendor-issued keys (zero backend)
+### 6.1 Lemon Squeezy keys (zero backend)
 
-- **Lemon Squeezy** as merchant of record (handles EU VAT per buyer country), single one-time product, **$5**, license keys enabled, activation limit **5**.
-- Purchase flow: popup "Get Pro" → opens LS checkout in a new tab → LS emails receipt + key → user pastes key into popup → done.
-- `lib/license`:
-  - `activate(key)` → `POST https://api.lemonsqueezy.com/v1/licenses/activate` with `instance_name = <browser> <os>`; on success store `{ key, instanceId, paid: true, checkedAt }` in **`chrome.storage.sync`**.
-  - `isPro()` → read cache; if `checkedAt` older than 7 days, call `/v1/licenses/validate` in the background (never block an export on the network); if the network is down, keep the cached answer (**offline grace 30 days**).
-  - `deactivate()` → `/v1/licenses/deactivate` from the options page, frees an activation slot.
-- **Storage in `sync`, not `local`**, on purpose: the key follows the user's Chrome profile to every device and survives reinstalls. Reinstalling resets nothing — the exact opposite of a local counter.
-- Popup has "I have a key" and "Lost my key?" → the LS license-recovery page (by email). Zero support load for you.
+- Lemon Squeezy as merchant of record (EU VAT per buyer country); one one-time product, **$5**, licence keys on, activation limit **5**. Setup: `docs/LEMON-SQUEEZY.md`. `CHECKOUT_URL` is empty until the product exists.
+- Flow: Draw's Pro badge or the popup's "Pro?" -> Pro dialog -> checkout tab -> key by email -> paste -> done. "Lost my key?" -> the LS recovery page.
+- `lib/license`: `activate(key)` (`instance_name = <browser> <os>`), cached in `storage.sync`; `isPro()` answers from cache and revalidates in the background after 7 days, with 30 days of offline grace; `deactivate()` from the options page frees a slot.
+- `sync`, not `local`: the key follows the profile and survives reinstalls.
 
-### 6.2 Later — self-signed offline keys (optional)
+### 6.2 Later - self-signed offline keys
 
-If you ever want independence from the vendor's API at runtime:
+Only if vendor-API independence is ever wanted: ECDSA P-256 signed payload verified offline with WebCrypto, issued by a webhook worker. No revocation, no activation limit - acceptable at $5. Not built.
 
-- Key format: `base64url(payload) + "." + base64url(signature)`; payload `{ p: "pagepdf", id: "<order id>", iat: <unix> }`.
-- Sign with **ECDSA P-256** (works in every Chrome via WebCrypto; Ed25519 also works but check the target Chrome version) using a private key that lives only in the issuing service.
-- Issuing service: a Cloudflare Worker receiving the payment webhook (`order_created`) → signs → emails the key via Resend. ~30 lines, but it is _your_ backend and _your_ on-call.
-- Verification in the extension is fully offline:
+### 6.3 Rules
 
-```ts
-const PUB_JWK = {
-  /* embedded public key */
-} as JsonWebKey;
+- Gate **features**, not counters. There is no export counter. `isPro()` is the only switch, checked once, where annotate mode starts.
+- Never call home on export.
+- The upsell is quiet: a "Pro" badge on Draw and one footer link. The Pro dialog opens only when tapped - never a modal on its own, never a post-export nag.
+- **Piracy:** a $5 key will be shared. No hardware binding, no phone-home - just the activation limit.
+- Licence key and cached status in `storage.sync`, nothing in `local`.
 
-export async function verifyKey(
-  key: string,
-): Promise<{ ok: true; id: string } | { ok: false }> {
-  const [p, s] = key.split(".");
-  if (!p || !s) return { ok: false };
-  const pub = await crypto.subtle.importKey(
-    "jwk",
-    PUB_JWK,
-    { name: "ECDSA", namedCurve: "P-256" },
-    false,
-    ["verify"],
-  );
-  const valid = await crypto.subtle.verify(
-    { name: "ECDSA", hash: "SHA-256" },
-    pub,
-    b64url(s),
-    b64url(p),
-  );
-  if (!valid) return { ok: false };
-  const payload = JSON.parse(new TextDecoder().decode(b64url(p)));
-  return payload.p === "pagepdf" ? { ok: true, id: payload.id } : { ok: false };
-}
-```
-
-- Trade-off: no revocation without an online check, no activation limits. At $5, acceptable.
-
-### 6.3 Rules that apply to both
-
-- Gate **features**, not counters. There is no export counter anywhere in this codebase; `isPro()` is the only switch, and it guards exactly one feature — Draw mode, at the one place annotate mode starts.
-- Never call home on export. License checks happen on popup open (rate-limited) or in the background, never in the export path.
-- Pro upsell is quiet: a "Pro" badge on the Draw button and one link in the popup's footer. The Pro dialog opens only when someone taps one of them — never on its own, never a post-export nag.
-- **Piracy stance:** a $5 key will be shared within a week. Don't fight it — no hardware binding, no phone-home, just the activation limit. People who pay $5 do it because they want to; the others were never customers (see: reinstalling the competitor to reset its counter).
-- Store `key` and cached status in `chrome.storage.sync`; store nothing about the license in `local`.
-
-**Merchant note:** with Lemon Squeezy (or Paddle) as merchant of record you are not the seller of record — they handle VAT/OSS. With ExtensionPay/Stripe _you_ are, and EU VAT on digital goods to consumers applies per buyer country. This is why LS is the v0.2 default. Confirm the Polish side (działalność nierejestrowana thresholds, etc.) with an accountant, not with this file.
+**Merchant note:** with LS as merchant of record they are the seller and handle VAT/OSS. Confirm the Polish side (działalność nierejestrowana thresholds) with an accountant.
 
 ---
 
 ## 7. Privacy
 
 - 100% local. No server, no analytics, no telemetry, no remote config.
-- Privacy policy (public URL, required by the store) says exactly that, in five sentences.
-- Register **trader status** in the Chrome Web Store developer dashboard before charging. It costs nothing and gives EU buyers normal consumer rights. Competitors didn't; be the one who did.
+- Privacy policy (public URL, required by the store) says exactly that. Draft: `docs/privacy-policy.md`; `PRIVACY_POLICY_URL` is empty until it is hosted.
+- Register **trader status** in the developer dashboard before charging anything.
 
 ---
 
-## 8. Two-weekend plan, and where it actually landed
+## 8. Plan
 
-Kept much as written, with the state of each line. The scope grew by three
-features that were not in this file at all — screenshots, drawing and keyboard
-shortcuts (README Deviations 13, 15-20, 21). The tiers moved too: weekend 2's
-one-click export, screen look and single long page shipped free, and Pro is
-Draw mode (§1, README Deviation 24). What stands between the code and the store
-is the listing work, not a feature.
-
-### Weekend 1 → v0.1 in the store (Free only)
-
-- [x] `pnpm dlx wxt@0.20 init`, TypeScript, pin versions, repo, README
-- [x] Popup: Export button, "hide sticky elements" / "expand details" / "load lazy images" / "add header" toggles — plus Draw and two screenshot buttons; every other setting lives on the options page
-- [x] Content script pre-processing + `window.print()` + `afterprint` restore — injected, never declared (Deviation 3)
-- [x] Options page: default toggles, filename template (now used by the one-click PDF and both screenshot paths), and the export mode
-- [ ] Icons done (`pnpm icons`); store screenshots (3), 132-char short description and the single-purpose statement are not
-- [ ] Privacy policy drafted in `docs/privacy-policy.md`; not hosted, and `PRIVACY_POLICY_URL` is empty
-- [ ] `wxt zip` → upload → submit for review
-
-### Weekend 2 → v0.2 (Pro)
-
-- [x] `lib/cdp` wrappers, `Emulation.setEmulatedMedia`, `printToPDF` stream path, offscreen Blob download (chunked, after a 64MiB message limit bit)
-- [ ] Explanation screen before the permission moment. The permission itself is declared, not optional — see §5
-- [x] Single-page mode with an equal-slice fallback and no merge, ceiling 500in (Deviation 4)
-- [ ] Lemon Squeezy product + `CHECKOUT_URL`, "I have a key" / "Lost my key?" UI. `activate()`/`validate()`/`deactivate()`/`isPro()` are written and the cache logic is tested
-- [ ] Trader status, updated permission justifications, submit v0.2
-
-Anything not ticked on the second Sunday goes to `BACKLOG.md`. Ship what exists.
+What is left is listed in `BACKLOG.md`.
 
 ---
 
 ## 9. Manual test matrix (run before every submit)
 
-| Page                                                 | Why                                            | Pass criteria                                                        |
-| ---------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------- |
-| explore.jobs.netflix.net job posting                 | dark theme, print CSS strips it, cookie banner | one click: dark look preserved; both paths: banner hidden; **Ctrl+F finds text** |
-| A long Medium / Substack article                     | lazy images, sticky header                     | all images present, header not repeated                              |
-| GitHub README                                        | code blocks, wide tables                       | no clipped tables in single-page mode                                |
-| A React SPA dashboard (any)                          | client-rendered, no print CSS                  | content present, not blank                                           |
-| Page with `position: fixed` chat widget              | element hiding                                 | widget gone, restored after print                                    |
-| 60,000 px tall page, single long page on             | the single-page ceiling, 500 in ≈ 48,000 px    | split into equal sheets of ≤ 500 in in one PDF, nothing merged, note shown |
-| "Use the print dialog" on (`exportMode: "print"`): Export PDF from the popup, `Ctrl/Cmd+Shift+S`, and — as Pro — Save from the drawing bar | the print path's one invariant, at all three entry points: it never attaches `debugger`. The mode is read in one place, so no entry point may pick the other path | Chrome's print dialog opens every time. **No** "started debugging this browser" bar, ever. "Single long page" is greyed out with its reason, and a single-page choice made before switching gives paginated sheets, not an error. Save, then Ctrl+F a word from the page in the PDF |
-| Any article, annotated (pencil, rect, a label)       | the marks must be real text and real vector    | bar gone; marks once each, right sheets; **Ctrl+F finds label text** |
-| The same article, with a label typed until it **wraps** onto 3-4 lines | one `<tspan>` per line; the later lines are what can stop being text | all lines present, in order; **Ctrl+F finds a word from a line that is not the first** — not found means broken |
-| A text box left **open**, then Ctrl+P; then again via a one-click export | the editor frame is chrome, not a mark, and must never print | **no dashed rectangle and no handles** in the preview, the PDF or a full-page screenshot; the label itself is there |
-| Symbols palette open: place 5 marks, then use a page `<select>` or menu | only the bar dismisses a panel — nothing in the page does | palette **still up** after all 5 marks and after the page's menu; its trigger or Esc closes it; absent from PDF and screenshot |
-| A paragraph of real text with a **cover** dragged over it (arm "Cover - removes text"), saved to PDF via Ctrl+P | the whole point of the feature. An opaque block that leaves the words in the text layer is worse than no tool at all — it looks like a redaction and publishes the text | **Ctrl+F a word that was under the block: NOT found.** Ctrl+F a word beside it in the same paragraph: **found**. Select the covered line in the PDF and copy it: the covered words are not in what you pasted |
-| The same page **after** the print dialog closes, then again after exiting annotate mode with the X | covers are applied around the capture and taken off after; a page left with holes in its text is a page this extension broke | all the text is back, **nothing reflowed** — the words after the block are exactly where they were — and the marks are where you left them. Both times |
-| The same cover over a **region screenshot**, and over the **one-click path** (`exportMode: "screen"`) | three capture brackets, not one: a save from the bar is a `window.print()` or a CDP capture happening inside a third thing | region PNG: nothing readable under the block, page intact afterwards. One-click PDF: the same two Ctrl+F results as the row above |
-| A page with a `<textarea>` holding text **and** a `<select>` with a chosen option, both covered | neither value is a text node any `Range` reaches — a `<select>`'s option label is painted by the browser's own widget — and Chrome prints both | the **whole** control is blank in the export and its value is not in the PDF, for **both**. A `<select>` still showing its option is the leak §30 closed reopening |
-| A cover over a **cross-origin iframe** | README Deviation 20's one genuine leak: confirm it is still exactly this and no worse, and that the bar still warns about it | the frame's own text **is** still in the PDF (expected, and documented); nothing outside the frame leaks, and the bar's note line said so |
-| A cover dropped in the middle of a paragraph with its top edge **between two lines** — run it at the **4px** pen and again at **8px** | the user's reported bug, and the one a unit test cannot reach: a character's `Range` box is the font box, so an edge in the empty leading paints over nothing and used to hide the whole line above — and the inset that fixes it is measured per line against the page's real font | Ctrl+F a word from the line **above** the block: **found**, at both pens. Ctrl+F a word from under the block: **not found**. The 8px pen paints 4px above the edge you dragged, so give it a couple of px of clearance; the line above disappearing when the edge is clearly below its glyphs is the bug back |
-| The same, on a paragraph whose **line above the block has descenders** in it (a `p`, a `g`, a `y`) | that line's ink really does reach almost to the bottom of its font box, so it is the thin case — about 4px of a 5px gap at the 8px pen genuinely is painted over | the line above goes only when the block's own ink lands on it. Written down in Deviation 20 with the swept numbers; this row is where it is seen rather than argued |
-| A cover over the text of a **web component** (`attachShadow({mode: "open"})` — build one in the console if no page to hand has one) | neither `createTreeWalker` nor `querySelectorAll` crosses a shadow boundary, so this hid nothing at all before task 39 | the covered word: **not found**; an `<input>` inside the component is blanked whole too. Repeat with `{mode: "closed"}`: the word **is** found — expected and documented. Then draw a **text label of our own** over the covered area: its text is still in the PDF and still findable, or the walk has reached inside our own layer |
-| A page whose entire content is inside `document.body.attachShadow({mode: "open"})` | the walk root is the one node a `TreeWalker` never returns, so missing *its* shadow root leaked the whole document at once — `runs: 0`, the markup byte-identical under a cover | a cover over any paragraph of it hides it: Ctrl+F the covered words, **not found**, and the words beside the block **found** |
-| A cover over an **SVG chart label** (`<svg><text>`, e.g. an axis label), on a chart with several | `createElement` is namespace-blind: an HTML `<span>` inside the SVG namespace renders nothing, so the glyphs left layout instead of staying hidden in place and the label's box collapsed | the covered label: **not found** in the PDF — **and the other labels have not moved**, axis by axis, against the page on screen. A neighbour that shifted means the wrapper collapsed the `<text>`'s box. If the page has a `<foreignObject>` with text in it, cover that too: same two checks |
-| The fill menu: open it, arm each of the three modes, then reload the page and Draw again | the armed mode is read off the trigger, the labels are a contract, and the cover warning is asserted in **no test** — this row is its only guard | trigger icon changes with the mode and its accessible name reads "Shape fill - " plus the button's own label **verbatim**; the cover sentence appears **once per session** — on the press that arms Cover, or when a session opens already armed on it after the reload — and never twice. The trigger renders wider than the 28px buttons with its icon a few px off centre: expected, `.btn.trigger` was written for the font-size control's tabular numbers |
-| `chrome://extensions/shortcuts` on a fresh profile, then each of the four keys on an ordinary article | the suggested keys are only *suggestions*: Chrome binds at most four per extension and silently drops any that one of its own shortcuts already owns, so a key can ship dead and no build, test or log will say so | all four commands listed, **none of them blank**, and the keys are the ones in `wxt.config.ts`. Press each: the PDF or the print dialog, a full-page shot, the drag selector, the drawing bar (or, with no key, the Pro toast). A blank row is not a bug to fix in code — rebind it there and change the suggestion |
-| `Ctrl/Cmd+Shift+S`, then `Ctrl/Cmd+Shift+K`, on a `pnpm build` with one click chosen (the default) and no key pasted — `DEV_UNLOCK_PRO` is false there | the tier boundary, at the two shortcuts either side of it: saving is free and must never ask for a key; drawing is Pro and must say so rather than do nothing | `S`: the PDF lands in Downloads with no dialog and **no** Pro upsell — a keypress that answers with one is the bug. The yellow bar shows while it runs and is gone after. Ctrl+F a word from the page in the PDF. `K`: no drawing bar, the page unchanged, and exactly **one** toast in it: "Draw mode is a Pro feature." In the popup, Draw shows a "Pro" badge and opens the Pro dialog |
-| `Ctrl/Cmd+Shift+X`, and again on a capture you make fail (start the drag, then close and reopen a devtools window over it, or pick a strip a few px tall) | the region path reports itself in the page because the popup is gone by then, so a shortcut that also reports duplicates it — and `select-area.ts` keeps one removal timer, so the **duplicate is the one that never leaves** | exactly **one** toast, whichever way it ends, and it fades after about 4s. Two toasts, or one still sitting there a minute later, means `commandToast` stopped keeping quiet for `capture-area` |
-| Any shortcut on `chrome://extensions`, the Web Store, and a `.pdf` in the built-in viewer | nothing can be injected there, so there is nothing to report *into* — this row exists to confirm the silence is total and harmless rather than half a broken overlay | **nothing happens at all**: no toast, no overlay, no changed page, and no uncaught error in the service worker's console. Compare with the popup on the same page, which greys its buttons out and says why. The difference is documented, not a regression |
-| `Ctrl/Cmd+Shift+S` with one click chosen, on a long page, then switch to another tab while it runs — one you have used the extension on before, so it holds its own `activeTab` grant | the toast is addressed from the tab the keypress fired on, resolved before the work; re-reading it afterwards put a slow export's "Saved" over whatever page the user had moved to | "Saved ….pdf" appears on the tab you **started from** (switch back to it), and **never** on the tab you moved to |
-| As Pro: `Ctrl/Cmd+Shift+K`, then the same key again, then `Ctrl/Cmd+Shift+X` without leaving the bar | a shortcut can arrive on a page that is already in a mode, which no unit test reaches | the second press does not stack a second bar or move the marks; the region capture hides the bar for the shot and brings it back, and the shot has the marks in it but no bar |
-| An article with many lazy images, exported from the popup and then again with Draw — and once more on a short page with **Load lazy images off** | the curtain is the only thing standing between the user and a page that scrolls itself to the bottom for no visible reason, and a curtain that outlives its sweep is worse than none | the dimmed overlay with "Preparing the page..." appears **over the viewport** while the page scrolls, both times, and is **gone** before the print dialog, the download or the drawing bar. With the sweep off, or on a page fast enough to finish inside 180ms, it never appears at all. Nothing of it is in the PDF or the screenshot |
-| The same, with the print dialog left open a while, then cancelled | the curtain comes down in a `finally` before the background is answered, so a dialog that sits open must not be sitting on top of one | no overlay behind or around the dialog, and the page is back to normal after Cancel |
+| Page | Why | Pass criteria |
+| --- | --- | --- |
+| explore.jobs.netflix.net job posting | dark theme, print CSS strips it, cookie banner | one click: dark look kept; both paths: banner hidden; **Ctrl+F finds text** |
+| A long Medium / Substack article | lazy images, sticky header | all images present, header not repeated |
+| GitHub README | code blocks, wide tables | no clipped tables in single-page mode |
+| A React SPA dashboard | client-rendered, no print CSS | content present, not blank |
+| Page with a `position: fixed` chat widget | element hiding | widget gone, restored after print |
+| 60,000px tall page, single long page on | the 500in (48,000px) ceiling | equal sheets of <= 500in in one PDF, note shown |
+| Print dialog on: Export PDF from the popup, `Ctrl/Cmd+Shift+S`, and Save from the drawing bar | the print path never attaches `debugger`, at all three entry points | print dialog every time; **no** debugging bar, ever. turning the print dialog on turns "Single long page" off, and turning that on turns the dialog off; a single-page choice saved by an older version gives paginated sheets, not an error. Ctrl+F a word in the PDF |
+| Any article, annotated (pencil, rect, a label) | marks must be real text and real vector | bar gone; each mark once, on the right sheet; **Ctrl+F finds the label** |
+| Same article, a label typed until it wraps to 3-4 lines | one `<tspan>` per line | all lines present, in order; **Ctrl+F finds a word from a later line** |
+| A text box left **open**, then Ctrl+P; again via one-click | the editor frame is chrome, not a mark | **no dashed rectangle or handles** in preview, PDF or full-page screenshot; the label is there |
+| Symbols palette open: place 5 marks, then use a page `<select>` or menu | only the bar dismisses a panel | palette **still up**; its trigger or Esc closes it; absent from PDF and screenshot |
+| Real text under a **cover** ("Cover - removes text"), saved via Ctrl+P | a cover that leaves the words in the text layer publishes them | **Ctrl+F a covered word: NOT found.** A word beside it: **found**. Copying the covered line does not paste the covered words |
+| Same page after the print dialog closes, and after exiting Draw with the X | covers come off after the capture | all text back, **nothing reflowed**, marks where you left them. Both times |
+| Same cover over a **region screenshot** and the **one-click path** | three capture brackets, not one | region PNG: nothing readable under the block, page intact after. One-click PDF: same two Ctrl+F results |
+| A covered `<textarea>` with text **and** a covered `<select>` with a chosen option | neither value is a text node; Chrome prints both | the **whole** control blank, value not in the PDF, for **both** |
+| A cover over a **cross-origin iframe** | Decision 20's one known leak - confirm it is no worse | the frame's text **is** in the PDF (documented); nothing outside it leaks; the bar's note line warned |
+| A cover whose top edge sits **between two lines**, at the 4px pen and the 8px pen | a `Range` box is the font box; the inset is measured per line | the line **above**: **found**, both pens. Under the block: **not found**. The 8px pen paints 4px above the edge - allow a couple of px |
+| Same, with **descenders** (`p`, `g`, `y`) on the line above | the thin case: that ink nearly reaches the gap | the line above goes only when the block's ink lands on it (Decision 20 has the numbers) |
+| A cover over text in an open **shadow root** (build one in the console if needed) | tree walks don't cross shadow boundaries | covered word **not found**; an `<input>` inside is blanked whole. `{mode: "closed"}`: the word **is** found (documented). A label of ours over the area: still findable |
+| A page whose whole content is in `document.body.attachShadow({mode: "open"})` | the walk root's own shadow root | a covered paragraph: **not found**; words beside it **found** |
+| A cover over an **SVG chart label** (`<svg><text>`) on a chart with several | the wrapper must be in the SVG namespace | covered label **not found**, **other labels unmoved**. Same two checks on any `<foreignObject>` text |
+| Fill menu: arm each of the three modes, reload, Draw again | the cover warning has no test; this row is its guard | trigger icon follows the mode; accessible name is "Shape fill - " + the button's label verbatim; cover sentence **once per session**, never twice. Trigger slightly wider than 28px buttons is expected |
+| `chrome://extensions/shortcuts` on a fresh profile, then each of the four keys | Chrome silently drops a suggested key it already owns | all four listed, **none blank**, keys match `wxt.config.ts`; each does its thing. A blank row: rebind there and change the suggestion |
+| `Ctrl/Cmd+Shift+S`, then `Ctrl/Cmd+Shift+K`, on a `pnpm build`, one click chosen, no key | the tier boundary at the two shortcuts either side of it | `S`: PDF in Downloads, no dialog, **no** Pro upsell; yellow bar only while it runs; Ctrl+F works. `K`: with `LAUNCH_FREE_FOR_ALL` on, the drawing bar opens. With it off: no bar, exactly **one** toast "Draw mode is a Pro feature.", and Draw in the popup shows a "Pro" badge that opens the Pro dialog |
+| `Ctrl/Cmd+Shift+X`, and on a capture made to fail (a strip a few px tall) | the region path reports in-page; a duplicate toast is the one that never leaves | exactly **one** toast either way, gone after about 4s |
+| Any shortcut on `chrome://extensions`, the Web Store, and a `.pdf` in the built-in viewer | nothing can be injected there | **nothing happens**: no toast, no overlay, no service-worker error. The popup greys its buttons out there instead - documented, not a regression |
+| `Ctrl/Cmd+Shift+S` on a long page, then switch to another tab (one with its own `activeTab` grant) while it runs | the toast targets the tab the key fired on | "Saved ....pdf" on the tab you **started from**, never on the one you moved to |
+| Draw: `Ctrl/Cmd+Shift+K`, the same key again, then `Ctrl/Cmd+Shift+X` without leaving the bar | a shortcut arriving mid-mode | no second bar, marks unmoved; the region shot hides the bar and has the marks but no bar |
+| Many lazy images, exported from the popup and with Draw; once more on a short page with **Load lazy images off** | a curtain that outlives its sweep is worse than none | "Preparing the page..." dims the viewport while it scrolls, both times, and is **gone** before the dialog, download or bar. Sweep off, or done inside 180ms: never appears. Not in the PDF or screenshot |
+| Same, print dialog left open a while, then cancelled | the curtain comes down before the background is answered | no overlay around the dialog; page normal after Cancel |
 
-After any export: open the PDF, **Ctrl+F**, search a word from the page. If nothing is found, the build is broken. With a cover on the page the check runs both ways, and the second half is the one that can hurt somebody: a covered word that **is** found means the cover is broken.
+After any export: open the PDF, **Ctrl+F** a word from the page. Nothing found means the build is broken. With a cover, check both ways: a covered word that **is** found means the cover is broken.
 
 ---
 
 ## 10. Known traps
 
-1. **Service workers can't `URL.createObjectURL`.** Use the offscreen document for Blob URLs, or `data:` URLs only for small files (< ~2 MB).
-2. **`printToPDF` base64 on huge pages** will blow memory — use `transferMode: 'ReturnAsStream'` + `IO.read`.
-3. **`chrome.debugger` can't attach** to `chrome://`, the Web Store, other extensions' pages, or the built-in PDF viewer. Detect and show a clear message.
-4. **The yellow infobar** is unavoidable on the one-click path; the popup's hint line says so, so nobody thinks it's malware, and the print dialog is the way to avoid it.
-5. **Detach in `finally`.** A leaked debugger session blocks DevTools for the user and looks exactly like malware.
-6. **`Emulation.setEmulatedMedia` persists** for the session — detaching resets it, but if you ever keep the session, reset with `{ media: '' }`.
-7. **Popup closes** when focus moves — on purpose for an area capture and for Draw — so anything that outlives the click is reported in the page or kept in storage, never in popup memory.
-8. **Filenames**: strip `/ \ : * ? " < > |`, cap at 120 chars, fall back to hostname.
-9. **WXT 0.20 import paths** (see §2).
-10. **Don't add analytics "just to see usage."** The privacy line is part of the product.
+1. **Service workers can't `URL.createObjectURL`.** Blob URLs come from the offscreen document.
+2. **`printToPDF` base64 on huge pages** blows memory - use `ReturnAsStream` + `IO.read`.
+3. **`chrome.debugger` can't attach** to `chrome://`, the Web Store, other extensions' pages or the built-in PDF viewer. Detect and say so (`lib/urls.ts`).
+4. **The yellow infobar** is unavoidable on the one-click path; the popup's hint line says so, and the print dialog avoids it.
+5. **Detach in `finally`.** A leaked debugger session blocks DevTools and looks like malware.
+6. **`Emulation.setEmulatedMedia` persists** for the session; detaching resets it.
+7. **The popup closes** when focus moves - on purpose for area capture and Draw - so anything outliving the click reports in the page or in storage, never in popup memory.
+8. **Filenames:** strip `/ \ : * ? " < > |`, cap at 120 chars, fall back to hostname.
+9. **WXT 0.20 import paths** (§2).
+10. **No analytics "just to see usage."** The privacy line is part of the product.
 
 ---
 
-## 11. Store listing skeleton
+## 11. Store listing
 
-- **Name:** TBD (short, own, no "Web to PDF")
-- **Short description (≤132):** "Save any page as a PDF with real, searchable text that looks like the screen. Free, unlimited, no nagging."
+- **Name:** Hardcopy - Save Page as PDF
+- **Short description (<= 132):** "Save any page as a PDF with real, searchable text that looks like the screen. Free, unlimited, no nagging."
 - **Single purpose:** Export the current web page to a PDF file.
 - **Category:** Productivity
-- **Screenshots:** popup; before/after (print CSS vs screen look); a page marked up with the drawing tools and the PDF it produced
-- **Privacy tab:** all data handling = "not collected"; justify each permission with the §5 text
+- **Screenshots:** popup; before/after (print CSS vs screen look); a marked-up page and the PDF it produced
+- **Privacy tab:** all data "not collected"; justify each permission with the §5 text
 - **Trader:** yes
 
----
-
-_Two weekends. Free tier first. Ctrl+F is the test. Ship._
+Draft: `docs/store-listing.md`.

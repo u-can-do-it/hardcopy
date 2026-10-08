@@ -128,7 +128,7 @@ export async function runExport(): Promise<void> {
 }
 
 /**
- * Take a screenshot (PNG) of the whole page, or of an area the user draws.
+ * Take a screenshot of the whole page, or of an area the user draws.
  *
  * The region path cannot report back here: selecting an area means clicking on
  * the page, and that closes the popup. So the popup hands the job over, says

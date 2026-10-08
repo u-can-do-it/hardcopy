@@ -10,7 +10,7 @@ const url = "https://www.example.com/blog/post";
 const date = new Date(2026, 8, 7, 14, 30, 5); // local time, 7 Sep 2026
 
 describe("sanitiseSegment", () => {
-  it("replaces the characters PROJECT.md §10.8 lists", () => {
+  it("replaces the characters project.md §10.8 lists", () => {
     expect(sanitiseSegment('a/b\\c:d*e?f"g<h>i|j')).toBe("a-b-c-d-e-f-g-h-i-j");
   });
 

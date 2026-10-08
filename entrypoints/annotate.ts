@@ -6,7 +6,7 @@
  * `entrypoints/prepare.ts` and `entrypoints/select-area.ts`: a declared content
  * script needs `matches`, and `<all_urls>` would put "read and change all your
  * data on all websites" on the install prompt that §5's `host_permissions: []`
- * exists to avoid (README Deviation 3).
+ * exists to avoid (ARCHITECTURE.md Decision 3).
  *
  * **Glue only.** Every decision belongs to a `lib/draw/` module with a test
  * beside it, and this file's whole job is to call them in the right order:
@@ -288,6 +288,25 @@ const PRINT_NOTE = "Opening the print dialog...";
  */
 const FILL_NOTE =
   "Cover hides the text under it from the export. It cannot reach inside an embedded frame.";
+
+/**
+ * What a save from an orphaned bar says.
+ *
+ * Reloading or updating the extension - which `pnpm dev` does on every
+ * background rebuild - leaves this script running on the page with its
+ * `chrome.runtime` cut off, and every `sendMessage` from it throws "Extension
+ * context invalidated". Nothing this bar does can reach the new background, so
+ * the note says what to do instead of passing that message through.
+ */
+const ORPHANED_NOTE = "Hardcopy was reloaded, so this bar can no longer save. Reload the page and start Draw again.";
+
+/**
+ * `false` once the extension has been reloaded or updated under this page.
+ * An orphaned content script loses `chrome.runtime.id` before anything else.
+ */
+function connected(): boolean {
+  return chrome.runtime?.id !== undefined;
+}
 
 /** The house one-liner for putting an unknown throw into a sentence. */
 function detail(error: unknown): string {
@@ -1461,7 +1480,7 @@ export default defineUnlistedScript(() => {
     // entrypoints/background.ts); nothing is re-checked afterwards, so a key
     // that lapses mid-session leaves that session open. The marks are in the
     // DOM before anything exports, and the only way to gate later would be to
-    // strip a user's marks out of their own PDF (README Deviation 15).
+    // strip a user's marks out of their own PDF (ARCHITECTURE.md Decision 15).
     const tool = s.pen.tool;
     if (tool === "text") {
       // No drag, and no preview to drag out - the pointer's whole job here was
@@ -1908,6 +1927,10 @@ export default defineUnlistedScript(() => {
    */
   async function save(target: AnnotateExportRequest["target"]): Promise<void> {
     if (saving) return;
+    if (!connected()) {
+      setNote(ORPHANED_NOTE);
+      return;
+    }
     saving = true;
     applyVisibility();
     try {
@@ -2087,6 +2110,12 @@ export default defineUnlistedScript(() => {
    */
   async function exit(): Promise<void> {
     if (exiting) return;
+    // Nobody is left to tell, so take the bar and the layer down here. The
+    // pass prepare.ts is holding is orphaned with it; a page reload undoes it.
+    if (!connected()) {
+      stop();
+      return;
+    }
     exiting = true;
     try {
       const reply = await send({ type: "ANNOTATE_EXIT" });

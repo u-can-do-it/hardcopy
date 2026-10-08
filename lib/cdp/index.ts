@@ -1,6 +1,6 @@
 /**
  * The only module in this codebase allowed to touch chrome.debugger
- * (PROJECT.md §3, rule 1).
+ * (project.md §3, rule 1).
  *
  * Detaching is not optional. A leaked debugger session blocks DevTools for the
  * user and looks exactly like malware (§10.5), so the only supported way to
@@ -34,7 +34,7 @@ export interface IoReadResult {
 /**
  * Whether `debugger` is actually granted.
  *
- * The original brief (PROJECT.md §4.2) planned to call
+ * The original brief (project.md §4.2) planned to call
  * `chrome.permissions.request({ permissions: ["debugger"] })` at first use.
  * That cannot work: Chrome lists `debugger` among the permissions that can
  * never be optional (alongside declarativeNetRequest, devtools, geolocation,
@@ -44,7 +44,7 @@ export interface IoReadResult {
  * There is therefore no runtime request helper here on purpose - it would
  * always resolve false. The explanation screen §4.2 asks for still has a job,
  * it just has to appear *before* the install or update rather than before a
- * permission prompt. See README "Deviations from PROJECT.md".
+ * permission prompt. See docs/ARCHITECTURE.md.
  */
 export async function hasDebuggerPermission(): Promise<boolean> {
   return chrome.permissions.contains({ permissions: ["debugger"] });

@@ -10,8 +10,8 @@ import { POPOVER_GAP_PX } from "@/lib/draw/geometry";
 
 /**
  * These are regression guards, not ceremony. Both properties have already cost
- * this project a debugging session in another form: README Deviation 7 (fixed
- * furniture repeated on every sheet) and Deviation 11 (a `media="print"` sheet
+ * this project a debugging session in another form: ARCHITECTURE.md Decision 7 (fixed
+ * furniture repeated on every sheet) and Decision 11 (a `media="print"` sheet
  * that never matches under the one-click path's screen-media emulation).
  */
 describe("LAYER_CSS", () => {
@@ -180,7 +180,7 @@ describe("BACKDROP_CSS", () => {
     //    which closes before it answers the background - so it is down before
     //    `window.print()` opens the print path's dialog and before the
     //    one-click path's CDP capture. Chrome repaints fixed elements on every
-    //    printed sheet (README Deviation 7, lib/dom/hide-fixed.ts); a curtain
+    //    printed sheet (ARCHITECTURE.md Decision 7, lib/dom/hide-fixed.ts); a curtain
     //    still up at print time would be grey chrome on all 14 pages, which is
     //    exactly what LAYER_CSS's never-fixed rule above exists to prevent.
     //

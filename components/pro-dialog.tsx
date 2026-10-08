@@ -1,5 +1,5 @@
 /**
- * What Pro is, shown when someone taps a locked feature (PROJECT.md §6.1).
+ * What Pro is, shown when someone taps a locked feature (project.md §6.1).
  *
  * Pro is Draw mode, all of it. Everything else - one-click export, the screen
  * look, single long page, screenshots - is free.

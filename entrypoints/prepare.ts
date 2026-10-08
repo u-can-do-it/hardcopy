@@ -1,5 +1,5 @@
 /**
- * In-page pre-processing, injected on demand (PROJECT.md §4.1).
+ * In-page pre-processing, injected on demand (project.md §4.1).
  *
  * This is an *unlisted* script, not a declared content script, and that is the
  * whole point. A declared content script needs `matches`, and `matches:

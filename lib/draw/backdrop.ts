@@ -3,7 +3,7 @@
  *
  * Pre-processing runs the lazy-image sweep, which scrolls the page to the
  * bottom and back. In annotate mode that ordering is load-bearing and is not
- * changing (`.plan/design.md` §4.2, `docs/features/DRAWING.md` §3): a mark
+ * changing (`.plan/design.md` §4.2, `.plan/archive/drawing/DRAWING.md` §3): a mark
  * stores a *document* coordinate, so an image that loads above it after it is
  * drawn slides the content down while the mark stays put. The sweep cannot be
  * moved to export time - what it needed was to stop reading as a glitch.
@@ -40,7 +40,7 @@ import { Z_INDEX } from "./css";
  * - `CLAUDE.md` and `LAYER_CSS` say the drawing layer is `position: absolute`
  *   in a clipping wrapper and *never* `fixed`, because Chrome repaints fixed
  *   elements on every printed sheet - a fixed layer stamps one arrow onto all
- *   14 pages (README Deviation 7, `lib/dom/hide-fixed.ts`).
+ *   14 pages (ARCHITECTURE.md Decision 7, `lib/dom/hide-fixed.ts`).
  * - This must be `fixed` anyway, because it is a *viewport* overlay and not a
  *   document one: it covers what the user is looking at while the page scrolls
  *   underneath it. An absolute curtain would scroll away with the sweep it

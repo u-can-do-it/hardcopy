@@ -1,5 +1,5 @@
 /**
- * Optional title / URL / date block at the top of the export (PROJECT.md §4.1).
+ * Optional title / URL / date block at the top of the export (project.md §4.1).
  *
  * Built with textContent throughout: the title and URL come from the page, and
  * this element is inserted into that same page.

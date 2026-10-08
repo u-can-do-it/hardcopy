@@ -1,5 +1,5 @@
 /**
- * Licence state as signals (PROJECT.md §6.1).
+ * Licence state as signals (project.md §6.1).
  *
  * Note the split between two questions that are easy to conflate:
  *   - `licenseState.pro` - does the user hold a valid key?

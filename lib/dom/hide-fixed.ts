@@ -1,5 +1,5 @@
 /**
- * Hide sticky headers, cookie bars and chat widgets (PROJECT.md §4.1).
+ * Hide sticky headers, cookie bars and chat widgets (project.md §4.1).
  *
  * Chrome repaints `position: fixed` elements on *every* printed sheet, so a
  * cookie banner left in place is a cookie banner on all 14 pages.

@@ -638,7 +638,7 @@ function canvasFont(cs: CSSStyleDeclaration): string {
  * it is counted in `CoverHandle.fields` rather than in `runs`.
  *
  * Reaches nothing inside a cross-origin iframe, which is `.plan/design.md`
- * §21.1 and a genuine leak. Say it in the README, not only here.
+ * §21.1 and a genuine leak. Say it in docs/ARCHITECTURE.md, not only here.
  *
  * Reaches the page's **open** shadow roots, and not its closed ones
  * (`.plan/contracts.md` §31.2). Neither `createTreeWalker` nor

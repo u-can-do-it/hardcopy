@@ -1,5 +1,5 @@
 /**
- * Options page (PROJECT.md §8, weekend 1).
+ * Options page.
  *
  * Everything saves as you type, debounced. There is no Save button to forget.
  *
@@ -224,22 +224,22 @@ export function App() {
           <SettingRow
             id="printDialog"
             label="Use Chrome's print dialog"
-            description="Off: one click saves the page as it looks on screen, straight to Downloads, and Chrome shows a yellow debugging bar while it runs. On: Chrome's print dialog opens instead, with the site's print styles and no debugging bar."
+            description="Off: one click saves the page as it looks on screen, straight to Downloads, and Chrome shows a yellow debugging bar while it runs. On: Chrome's print dialog opens instead, with the site's print styles and no debugging bar. The dialog always paginates, so turning it on turns off the long page below."
             checked={printDialog}
             disabled={current === null}
             onCheckedChange={(checked) => void setExportMode(checked ? "print" : "screen")}
           />
 
           {/*
-            One-click only - see the note in the popup's App.tsx. Disabled
-            rather than hidden while the print dialog is chosen just above.
+            One-click only - see the note in the popup's App.tsx. The two rows
+            exclude each other: switching either on switches the other off.
           */}
           <SettingRow
             id="singlePage"
             label="Save the whole page as one long page"
-            description="One continuous page with no page breaks, however tall the page is. Not with the print dialog: it always paginates to the paper size picked in it."
+            description="One continuous page with no page breaks, however tall the page is. The print dialog cannot do this, so turning it on turns the print dialog off."
             checked={current?.pageMode === "single" && !printDialog}
-            disabled={current === null || printDialog}
+            disabled={current === null}
             onCheckedChange={(checked) => void setSinglePage(checked)}
           />
         </CardContent>

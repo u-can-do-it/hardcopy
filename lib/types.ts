@@ -185,7 +185,7 @@ export interface PrepReport {
   warnings: string[];
   /**
    * Set in single-page mode when the page was too tall for one sheet and had
-   * to be split (PROJECT.md §4.2, "Single-page trap").
+   * to be split (project.md §4.2, "Single-page ceiling").
    */
   pageSizeNote?: string;
 }

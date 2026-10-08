@@ -10,8 +10,8 @@ Do NOT write implementation code. This is the spec pass only.
 
 - `CLAUDE.md` has the architecture rules, invariants and pinned versions —
   treat them as constraints on the plan, not suggestions.
-- Read `project.md` (product brief), `README.md` (state of the code and its
-  **Deviations** list) and `BACKLOG.md` (what was deferred and why).
+- Read `project.md` (product brief), `docs/ARCHITECTURE.md` (state of the code
+  and its numbered decisions) and `BACKLOG.md` (what was deferred and why).
   If the feature contradicts any of them, say so before planning.
 
 ## Then produce a `.plan/` directory

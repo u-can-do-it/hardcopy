@@ -58,7 +58,7 @@ export interface StateRequest {
   type: "GET_STATE";
 }
 
-/** Take a PNG of the whole page, or of a rectangle the user draws over it. */
+/** Take a screenshot of the whole page, or of a rectangle the user draws over it. */
 export interface CaptureRequest {
   type: "CAPTURE";
   area: CaptureArea;
@@ -294,7 +294,7 @@ export interface OffscreenRequest {
   id: string;
   /** This chunk, base64-encoded so it survives the message channel. */
   base64: string;
-  /** MIME type for the Blob; PDFs and PNGs both come through here. */
+  /** MIME type for the Blob; PDFs and screenshots both come through here. */
   mime: string;
   /** The last chunk: assemble the Blob and reply with its URL. */
   final: boolean;

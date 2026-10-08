@@ -1,5 +1,5 @@
 /**
- * Single continuous page (PROJECT.md §1, "Single long page"). **One-click only.**
+ * Single continuous page (project.md §1, "Single long page"). **One-click only.**
  *
  * This was briefly wired into the `window.print()` path on the assumption that
  * CSS Paged Media would be enough. It is not, and the feature needs the CDP

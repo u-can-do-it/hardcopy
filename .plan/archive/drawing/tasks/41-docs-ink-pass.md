@@ -15,7 +15,7 @@ places it still cannot reach.
 `lib/dom/cover.ts` after tasks 38-40 land. `CLAUDE.md` treats numbers in docs as
 measured claims, so confirm each in the source or re-measure it.
 
-**README Deviation 20** gains:
+**DEVIATIONS.md Deviation 20** gains:
 - **the ink band**, briefly and with its number: a character's `Range` box is
   the font box, so it includes descent and half-leading that no glyph paints in;
   a cover edge there covers nothing and now hides nothing. Say what went wrong

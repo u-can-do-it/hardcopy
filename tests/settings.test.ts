@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_SETTINGS, effectivePageMode, mergeSettings } from "@/lib/settings";
+import {
+  DEFAULT_SETTINGS,
+  effectivePageMode,
+  exportModePatch,
+  mergeSettings,
+  pageModePatch,
+} from "@/lib/settings";
 
 describe("mergeSettings", () => {
   it("returns defaults for nothing stored", () => {
@@ -63,6 +69,10 @@ describe("mergeSettings", () => {
     );
   });
 
+  it("defaults to a single long page", () => {
+    expect(DEFAULT_SETTINGS.pageMode).toBe("single");
+  });
+
   it("falls back to paginated for an unknown page mode", () => {
     expect(mergeSettings({ pageMode: "sideways" }).pageMode).toBe("paginated");
   });
@@ -75,6 +85,30 @@ describe("mergeSettings", () => {
   it("treats an unknown export mode - a stored `batch` included - as one-click", () => {
     expect(mergeSettings({ exportMode: "batch" }).exportMode).toBe("screen");
     expect(mergeSettings({ exportMode: 3 }).exportMode).toBe("screen");
+  });
+});
+
+describe("exportModePatch / pageModePatch", () => {
+  it("turns single page off when the print dialog goes on", () => {
+    expect(exportModePatch("print")).toEqual({ exportMode: "print", pageMode: "paginated" });
+  });
+
+  it("turns the print dialog off when single page goes on", () => {
+    expect(pageModePatch("single")).toEqual({ pageMode: "single", exportMode: "screen" });
+  });
+
+  it("leaves the other setting alone when either goes off", () => {
+    expect(exportModePatch("screen")).toEqual({ exportMode: "screen" });
+    expect(pageModePatch("paginated")).toEqual({ pageMode: "paginated" });
+  });
+
+  it("never stores the pair the dialog cannot honour", () => {
+    const start = mergeSettings({ exportMode: "screen", pageMode: "single" });
+    const after = mergeSettings({ ...start, ...exportModePatch("print") });
+    expect([after.exportMode, after.pageMode]).toEqual(["print", "paginated"]);
+
+    const back = mergeSettings({ ...after, ...pageModePatch("single") });
+    expect([back.exportMode, back.pageMode]).toEqual(["screen", "single"]);
   });
 });
 

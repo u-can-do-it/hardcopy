@@ -15,6 +15,7 @@ describe("encodingFor", () => {
   it("describes WebP as the compressed default", () => {
     expect(encodingFor("webp")).toEqual({
       format: "webp",
+      label: "WebP",
       mime: "image/webp",
       extension: ".webp",
       quality: WEBP_QUALITY,
@@ -43,21 +44,21 @@ describe("encodingFor", () => {
     expect(png.mime).toBe("image/png");
   });
 
-  it("falls back to WebP for anything unrecognised", () => {
-    expect(encodingFor(undefined).format).toBe("webp");
-    expect(encodingFor("gif" as never).format).toBe("webp");
+  it("falls back to JPEG for anything unrecognised", () => {
+    expect(encodingFor(undefined).format).toBe("jpeg");
+    expect(encodingFor("gif" as never).format).toBe("jpeg");
   });
 });
 
 describe("imageFormat setting", () => {
-  it("defaults to WebP", () => {
-    expect(DEFAULT_SETTINGS.imageFormat).toBe("webp");
-    expect(mergeSettings({}).imageFormat).toBe("webp");
+  it("defaults to JPEG", () => {
+    expect(DEFAULT_SETTINGS.imageFormat).toBe("jpeg");
+    expect(mergeSettings({}).imageFormat).toBe("jpeg");
   });
 
   it("keeps a stored choice and rejects a nonsense one", () => {
     expect(mergeSettings({ imageFormat: "png" }).imageFormat).toBe("png");
-    expect(mergeSettings({ imageFormat: "tiff" }).imageFormat).toBe("webp");
+    expect(mergeSettings({ imageFormat: "tiff" }).imageFormat).toBe("jpeg");
   });
 });
 

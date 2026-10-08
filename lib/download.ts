@@ -1,5 +1,5 @@
 /**
- * Background-side half of the download path (PROJECT.md §10.1).
+ * Background-side half of the download path (project.md §10.1).
  *
  * Split across two contexts out of necessity: only a document can create a
  * Blob URL, and only the service worker can reach `chrome.downloads`.

@@ -40,7 +40,7 @@ export const LAUNCH_FREE_FOR_ALL = true;
  */
 export const DEV_UNLOCK_PRO = import.meta.env.MODE === "development";
 
-/** Lemon Squeezy checkout, filled in when the product exists (PROJECT.md §6.1). */
+/** Lemon Squeezy checkout, filled in when the product exists (project.md §6.1). */
 export const CHECKOUT_URL = "";
 
 /** Lemon Squeezy license recovery ("Lost my key?"). */

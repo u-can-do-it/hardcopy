@@ -32,7 +32,7 @@ arrow onto all 14 pages); both strings are non-empty and mention `LAYER_ATTR`
 / the bar's own class prefix so a rename cannot silently orphan them.
 
 These are real regression guards, not ceremony: both properties have already
-cost this project a debugging session in another form (README Deviations 7 and
+cost this project a debugging session in another form (DEVIATIONS.md Deviations 7 and
 11).
 
 **Depends on**: none

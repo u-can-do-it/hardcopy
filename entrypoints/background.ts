@@ -1,5 +1,5 @@
 /**
- * Service worker: orchestrates exports (PROJECT.md §3).
+ * Service worker: orchestrates exports (project.md §3).
  *
  * Every step re-checks the tab, because the user can close it at any moment
  * and a service worker that assumes otherwise throws in the user's face.
@@ -158,7 +158,7 @@ async function setAnnotateUi(tabId: number, visible: boolean): Promise<void> {
 }
 
 /**
- * One-click export (PROJECT.md §4.2): no dialog, screen CSS, real page size.
+ * One-click export (project.md §4.2): no dialog, screen CSS, real page size.
  * The default `exportMode`.
  *
  * The whole reason this cannot be done from the print path is step 1 here -
@@ -715,7 +715,7 @@ async function handleAnnotate(request: AnnotateRequest): Promise<BgResponse> {
       // it already has and never re-prepares (contracts.md §13), so a `screenMedia: true`
       // arriving later is ignored - and the pass would be missing both
       // `freezeViewportUnits()` and the unconditional `BREAK_RESET_CSS`, which
-      // is README Deviations 10 and 11 coming back by a side door.
+      // is ARCHITECTURE.md Decisions 10 and 11 coming back by a side door.
       //
       // It is also the more correct order by design.md §4.2: annotate mode
       // exists so that what you draw on is what gets exported, so if the
@@ -835,7 +835,7 @@ async function handleAnnotateExport(
     return fail("NO_TAB", "Switch back to the tab you drew on and save from there.");
   }
 
-  // The bar's two screenshots are the popup's two, unchanged. "Save as PNG" is
+  // The bar's two screenshots are the popup's two, unchanged. "Save as image" is
   // the full page, because the marks are spread over the whole document; "Save
   // selected area" puts the selector up and asks for the rectangle the bar has
   // no way to offer. `handleCapture`'s region branch already hides the bar and

@@ -8,7 +8,14 @@
 
 import { computed, signal } from "@preact/signals";
 
-import { loadSettings, onSettingsChanged, patchSettings, type SettingsPatch } from "@/lib/settings";
+import {
+  exportModePatch,
+  loadSettings,
+  onSettingsChanged,
+  pageModePatch,
+  patchSettings,
+  type SettingsPatch,
+} from "@/lib/settings";
 import type { ExportMode, ImageFormat, Settings } from "@/lib/types";
 
 /** null until the first read from storage.sync resolves. */
@@ -43,14 +50,14 @@ export async function updateSettings(patch: SettingsPatch): Promise<void> {
   settings.value = next;
 }
 
-/** One click straight to Downloads, or Chrome's print dialog. */
+/** One click straight to Downloads, or Chrome's print dialog (which ends single page). */
 export async function setExportMode(mode: ExportMode): Promise<void> {
-  await updateSettings({ exportMode: mode });
+  await updateSettings(exportModePatch(mode));
 }
 
-/** One continuous sheet instead of A4 pages. */
+/** One continuous sheet instead of A4 pages (which ends the print dialog). */
 export async function setSinglePage(single: boolean): Promise<void> {
-  await updateSettings({ pageMode: single ? "single" : "paginated" });
+  await updateSettings(pageModePatch(single ? "single" : "paginated"));
 }
 
 /** How screenshots are encoded: WebP, JPEG or lossless PNG. */

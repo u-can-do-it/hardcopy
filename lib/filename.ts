@@ -1,5 +1,5 @@
 /**
- * Filename templating and sanitising (PROJECT.md §10.8).
+ * Filename templating and sanitising (project.md §10.8).
  *
  * Tokens: {title} {host} {date} {time} {datetime}
  * Pure module - no chrome.* - so it is covered by tests/filename.test.ts.

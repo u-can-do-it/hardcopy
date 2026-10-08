@@ -1,5 +1,5 @@
 /**
- * "I have a key" (PROJECT.md §6.1). Shared by the Pro dialog and the options
+ * "I have a key" (project.md §6.1). Shared by the Pro dialog and the options
  * page, so there is one implementation of activation to get right.
  *
  * No account, no login - a key pasted once, stored in storage.sync so it

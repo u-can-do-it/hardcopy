@@ -663,7 +663,7 @@ export interface DrawLayer {
    * capture, which clears this; and the container is `display: none` whenever
    * the layer is not `interactive`, which covers the region selector and the
    * one-click capture on their own. A `media="print"` rule is not an option -
-   * the one-click path emulates screen media (README Deviation 11).
+   * the one-click path emulates screen media (ARCHITECTURE.md Decision 11).
    */
   setFrame(rect: DrawRect | null): void;
   /** `false` drops pointer-events so the region selector can have the pointer. */

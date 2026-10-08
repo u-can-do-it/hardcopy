@@ -1,5 +1,5 @@
 /**
- * Reveal content the page has collapsed or clipped (PROJECT.md §4.1).
+ * Reveal content the page has collapsed or clipped (project.md §4.1).
  */
 
 import { overrideStyle, undoAll, type Undo } from "./style";

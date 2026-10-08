@@ -7,7 +7,7 @@ describe("canInject", () => {
     expect(canInject("http://localhost:3000/").ok).toBe(true);
   });
 
-  it("rejects the privileged schemes from PROJECT.md §10.3", () => {
+  it("rejects the privileged schemes from project.md §10.3", () => {
     for (const url of [
       "chrome://settings",
       "chrome-extension://abc/page.html",

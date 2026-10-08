@@ -40,7 +40,7 @@ does not change - which matters more here than in most projects, per README
 Deviation 1.
 
 The annotate script is **injected, never declared**, for the same reason as
-`entrypoints/prepare.ts` and `entrypoints/select-area.ts` (README Deviation 3).
+`entrypoints/prepare.ts` and `entrypoints/select-area.ts` (DEVIATIONS.md Deviation 3).
 A declared content script needs `matches`, and `<all_urls>` would put "read and
 change all your data on all websites" on the prompt.
 
@@ -55,7 +55,7 @@ and `select-area.js` too. `chrome.scripting.executeScript({ files })` under
 Drawing needs no CDP at all: the pencil is pointer events and an SVG element.
 The `CLAUDE.md` invariant holds without effort - the only `debugger` use in the
 whole feature is the one already there, reached when someone asks for a PNG or
-a Pro PDF (README Deviation 13).
+a Pro PDF (DEVIATIONS.md Deviation 13).
 
 ### Tier split
 
@@ -83,7 +83,7 @@ PDF. We are not doing that. So:
 
 > The drawing tier gate is a UI gate. It follows `isPro()` on every entry into
 > annotate mode, and it can be defeated by anyone willing to open devtools on
-> their own page. At $5 with no counter anywhere (PROJECT.md §6.3), that is the
+> their own page. At $5 with no counter anywhere (project.md §6.3), that is the
 > right trade; it is written down rather than assumed.
 
 So the gate is exactly one thing and no more: **a locked tool button is
@@ -171,7 +171,7 @@ The layer itself stays **visible** through a capture - the marks are the point.
 
 Injected with `injectUnconditionalCss()`, not as `media="print"`, because a
 `media="print"` sheet never matches while the Pro path emulates screen media -
-the lesson of README Deviation 11. It sets `print-color-adjust: exact` on
+the lesson of DEVIATIONS.md Deviation 11. It sets `print-color-adjust: exact` on
 itself regardless of the `exactColors` setting, so a user who turned that off
 does not get washed-out marks, and it forces `display: block` / `visibility:
 visible` on its own subtree so a site whose print stylesheet says
@@ -337,7 +337,7 @@ problem nobody has here), svg.js / snap.svg (a nicer way to type
    there (`lib/pdf/painted-height.ts` looks at pixels, not at the DOM). Correct
    behaviour, surprising the first time.
 3. **Fixed furniture that survives hiding** - anything over the 20% text share
-   guard (README Deviation 7) or under `stickyMinHeight` - sits somewhere else
+   guard (DEVIATIONS.md Deviation 7) or under `stickyMinHeight` - sits somewhere else
    on paper than on screen, so marks anchored to it look misplaced. Nothing to
    do beyond knowing why.
 4. **Cross-origin iframes** can be drawn over but not into. Fine: the layer is
@@ -358,7 +358,7 @@ problem nobody has here), svg.js / snap.svg (a nicer way to type
    prepare.ts answers a held pass with the report it already has and never
    re-prepares, so a later `screenMedia: true` is ignored and the pass would
    lack `freezeViewportUnits()` and the unconditional `BREAK_RESET_CSS` -
-   README Deviations 10 and 11 by a side door. The tier decides it because that
+   DEVIATIONS.md Deviations 10 and 11 by a side door. The tier decides it because that
    is what decides the renderer: Pro renders through CDP with screen media
    emulated, free renders through `window.print()`, which emulates nothing.
    The visible consequence is that a Pro user with single-page mode on watches
@@ -391,7 +391,7 @@ Per `CLAUDE.md`: the pure halves under `tests/`, flat, plain vitest, no DOM
 harness. Ten new suites, one per `lib/draw/` module
 (`tests/draw-<topic>.test.ts`). The DOM and Chrome-facing halves - the bar, the
 layer mount, the pointer state machine - get `pnpm compile` plus explicit
-**Manual check** steps in their task files, and one new row in the PROJECT.md
+**Manual check** steps in their task files, and one new row in the project.md
 §9 matrix:
 
 > annotate a page (pencil, rect, a label), export, **Ctrl+F the label text**.

@@ -1,5 +1,5 @@
 /**
- * Lemon Squeezy license keys - no accounts, no login (PROJECT.md §6.1).
+ * Lemon Squeezy license keys - no accounts, no login (project.md §6.1).
  *
  * Two rules this module exists to enforce:
  *   - Gate features, never counters. `isPro()` is the only switch in the

@@ -1,5 +1,5 @@
 /**
- * The injected `<style media="print">` (PROJECT.md §4.1 step 2).
+ * The injected `<style media="print">` (project.md §4.1 step 2).
  */
 
 import type { Undo } from "./style";

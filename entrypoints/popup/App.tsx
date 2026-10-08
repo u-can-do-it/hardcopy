@@ -1,6 +1,6 @@
 /**
- * Popup: export this page (PROJECT.md §8, weekend 1 - which specified four
- * toggles here; they now live on the options page instead).
+ * Popup: export this page. The original brief put four pre-processing
+ * toggles here; they now live on the options page instead.
  *
  * The actions - Export PDF, Draw, the two screenshot buttons - plus the two
  * rows that decide what Export PDF does: single long page, and one click
@@ -19,6 +19,7 @@ import { useEffect, useState } from "preact/hooks";
 
 import { ProDialog } from "@/components/pro-dialog";
 import { SettingRow } from "@/components/setting-row";
+import { encodingFor } from "@/lib/capture/format";
 import { LAUNCH_FREE_FOR_ALL } from "@/lib/constants";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -72,26 +73,22 @@ export function App() {
           paper size from its own dropdown and discards `@page { size }`, so
           the `window.print()` path cannot produce one tall sheet. Verified on
           Chrome 152 - the same document through printToPDF is 1 page of
-          10.42x31.25in, through the dialog it is N Letter pages. So the row
-          is disabled rather than hidden while the print dialog is chosen,
-          with the reason in its description and the cause right below it.
+          10.42x31.25in, through the dialog it is N Letter pages. So the two
+          rows exclude each other: switching either on switches the other off
+          (`exportModePatch` / `pageModePatch` in lib/settings.ts).
         */}
         <SettingRow
           id="singlePage"
           label="Single long page"
-          description={
-            printDialog
-              ? "Not with the print dialog - it always paginates"
-              : "One tall page instead of A4 sheets"
-          }
+          description="One tall page instead of A4 sheets"
           checked={current?.pageMode === "single" && !printDialog}
-          disabled={controlsDisabled.value || printDialog}
+          disabled={controlsDisabled.value}
           onCheckedChange={(checked) => void setSinglePage(checked)}
         />
         <SettingRow
           id="printDialog"
           label="Use the print dialog"
-          description="The site's print styles, and no debugging bar"
+          description="The site's print styles, no debugging bar - always paginated"
           checked={printDialog}
           disabled={controlsDisabled.value}
           onCheckedChange={(checked) => void setExportMode(checked ? "print" : "screen")}
@@ -140,12 +137,14 @@ export function App() {
       </div>
 
       {/*
-        Screenshots are the other half of "save this page": a PNG when the point
+        Screenshots are the other half of "save this page": an image when the point
         is what it looked like, a PDF when the point is the text. "Area" leaves
         the popup - picking a rectangle means clicking on the page, and that
         dismisses the popup either way - so the result is reported in the page.
       */}
-      <p className="text-muted-foreground mt-3 mb-1.5 text-[11px] font-medium">Screenshot (PNG)</p>
+      <p className="text-muted-foreground mt-3 mb-1.5 text-[11px] font-medium">
+        Screenshot ({encodingFor(current?.imageFormat).label})
+      </p>
       <div className="grid grid-cols-2 gap-2">
         <Button
           variant="outline"

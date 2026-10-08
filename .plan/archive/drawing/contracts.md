@@ -511,7 +511,7 @@ export const Z_INDEX = 2_147_483_647;
 /**
  * Injected with `injectUnconditionalCss()`, never as `media="print"`: a
  * `media="print"` sheet does not match while the Pro path emulates screen
- * media (README Deviation 11).
+ * media (DEVIATIONS.md Deviation 11).
  *
  * Forces `print-color-adjust: exact` on our subtree regardless of the
  * `exactColors` setting, so a user who turned that off does not get
@@ -829,7 +829,7 @@ matters now runs the other way: **nothing in `geometry.ts` may import from
 
 **§10 `lib/draw/layer.ts`** - `markSpec(shape: Shape): NodeSpec`. It is the
 pure half of the per-mark `<svg>` restructure (one small `<svg>` per mark, never
-one document-tall one - README Deviation 16), and it is where the box maths is
+one document-tall one - DEVIATIONS.md Deviation 16), and it is where the box maths is
 tested: `tests/draw-layer.test.ts` re-derives each kind's painted extent from
 what `shapeToSpec` produced and asserts the box contains it.
 
@@ -1548,7 +1548,7 @@ export interface DrawLayer {
    * capture, which clears this; and the container is `display: none` whenever
    * the layer is not `interactive`, which covers the region selector and the
    * Pro capture on their own. A `media="print"` rule is not an option - the Pro
-   * path emulates screen media (README Deviation 11).
+   * path emulates screen media (DEVIATIONS.md Deviation 11).
    */
   setFrame(rect: DrawRect | null): void;
   setInteractive(on: boolean): void;

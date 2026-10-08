@@ -28,7 +28,7 @@ exit.
   instead of activating the tool. That is the entire gate - nothing is
   re-checked later, and if someone tricks their own page into drawing a pin
   they get their pin (`design.md` §3). No modal, no new tab, no post-export nag
-  (PROJECT.md §6.3), and no attempt to reach the popup's Preact `ProDialog`
+  (project.md §6.3), and no attempt to reach the popup's Preact `ProDialog`
   from a shadow root.
 
 **Out of scope**: deciding which tools are unlocked (the background does that -

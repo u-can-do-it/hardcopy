@@ -1,6 +1,6 @@
 /**
  * Orchestrates one pre-processing pass and hands back a single undo
- * (PROJECT.md §4.1). Used by the print path before window.print(), and by the
+ * (project.md §4.1). Used by the print path before window.print(), and by the
  * one-click path before driving CDP.
  */
 
